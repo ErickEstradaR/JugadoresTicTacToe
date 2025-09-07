@@ -1,6 +1,5 @@
 package edu.ucne.jugadorestictactoe.presentation.Jugador
 
-import edu.ucne.jugadorestictactoe.data.local.Entities.JugadorEntity
 import edu.ucne.jugadorestictactoe.domain.model.Jugador
 
 data class JugadorUiState (

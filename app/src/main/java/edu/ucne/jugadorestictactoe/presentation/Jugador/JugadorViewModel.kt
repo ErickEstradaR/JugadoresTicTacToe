@@ -1,10 +1,8 @@
 package edu.ucne.jugadorestictactoe.presentation.Jugador
 
-import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import edu.ucne.jugadorestictactoe.data.local.Entities.JugadorEntity
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadorUseCases
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
