@@ -1,30 +1,13 @@
 package edu.ucne.jugadorestictactoe.presentation.Jugador
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -36,23 +19,25 @@ fun JugadorScreen(
     jugadorId: Int?,
     viewModel: JugadorViewModel = hiltViewModel(),
     goback: () -> Unit
-){
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val scope = rememberCoroutineScope()
 
-    LaunchedEffect(jugadorId) {
-        println("Id: $jugadorId")
-        jugadorId?.let {
-            if(it > 0){
-                viewModel.findJugador(it)
-            }
+    LaunchedEffect(Unit) {
+        jugadorId?.takeIf { it > 0 }?.let {
+            viewModel.findJugador(it)
         }
     }
 
-   JugadorBodyScreen(
+    JugadorBodyScreen(
         uiState = uiState,
-        viewModel::onEvent,
+        onAction = viewModel::onEvent,
         goback = goback,
-        viewModel = viewModel
+        saveJugador = {
+            scope.launch {
+                if (viewModel.saveJugador()) goback()
+            }
+        }
     )
 }
 
@@ -62,19 +47,23 @@ fun JugadorBodyScreen(
     uiState: JugadorUiState,
     onAction: (JugadorEvent) -> Unit,
     goback: () -> Unit,
-    viewModel: JugadorViewModel
-
+    saveJugador: suspend () -> Unit
 ) {
     val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(if (uiState.jugadorId != null && uiState.jugadorId != 0) "Editar Jugador " else "Nuevo Jugador") },
+                title = {
+                    Text(
+                        if (uiState.jugadorId != null && uiState.jugadorId != 0)
+                            "Editar Jugador"
+                        else
+                            "Nuevo Jugador"
+                    )
+                },
                 navigationIcon = {
-                    IconButton(
-                        onClick = goback
-                    ) {
+                    IconButton(onClick = goback) {
                         Icon(Icons.Default.ArrowBack, "Volver")
                     }
                 }
@@ -98,10 +87,10 @@ fun JugadorBodyScreen(
 
             OutlinedTextField(
                 value = uiState.nombres,
-                onValueChange = { onAction(JugadorEvent.NombreChange(it)) }, // ya no nullable
-                label = { Text("Nombre: ") },
+                onValueChange = { onAction(JugadorEvent.NombreChange(it)) },
+                label = { Text("Nombre:") },
                 modifier = Modifier.fillMaxWidth(),
-                isError = uiState.errorMessage != null
+                isError = !uiState.errorMessage.isNullOrEmpty()
             )
             Spacer(Modifier.height(16.dp))
 
@@ -113,43 +102,31 @@ fun JugadorBodyScreen(
                 },
                 label = { Text("Partidas") },
                 modifier = Modifier.fillMaxWidth(),
-                isError = uiState.errorMessage != null
+                isError = !uiState.errorMessage.isNullOrEmpty()
             )
 
-            uiState.errorMessage?.let {
-                Text(
-                    text = it,
-                    color = colors.error
-                )
+            uiState.errorMessage?.takeIf { it.isNotEmpty() }?.let {
+                Text(text = it, color = colors.error)
             }
+
             Spacer(Modifier.weight(1f))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                OutlinedButton(
-                    onClick = { onAction(JugadorEvent.new) }
-                ) {
+                OutlinedButton(onClick = { onAction(JugadorEvent.new) }) {
                     Text("Limpiar")
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
                     Icon(Icons.Default.Refresh, "Limpiar")
                 }
 
-                OutlinedButton(
-                    onClick = {
-                        scope.launch {
-                            val result = viewModel.saveJugador()
-                            if (result) {
-                                goback()
-                            }
-                        }
-                    }
-                ) {
-                    Text("Guardar")
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Icon(Icons.Default.Edit, "Guardar")
+                Spacer(modifier = Modifier.width(16.dp))
 
+                OutlinedButton(onClick = { scope.launch { saveJugador() } }) {
+                    Text("Guardar")
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Icon(Icons.Default.Edit, "Guardar")
                 }
             }
         }

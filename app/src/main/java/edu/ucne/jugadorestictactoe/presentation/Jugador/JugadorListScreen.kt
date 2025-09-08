@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -17,9 +18,14 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -28,7 +34,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import edu.ucne.jugadorestictactoe.domain.model.Jugador
-
 @Composable
 fun JugadorListScreen(
     viewModel: JugadorViewModel = hiltViewModel(),
@@ -36,25 +41,23 @@ fun JugadorListScreen(
     createJugador: () -> Unit
 ){
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    JugadorBodyScreen(
-        jugadores = state.jugadores,
-        goToJugador = { id -> goToJugadores(id)},
-        createJugador = createJugador,
-        deleteJugador = { jugador ->
-            viewModel.onEvent(JugadorEvent.JugadorChange(jugador.id ?: 0))
-            viewModel.onEvent(JugadorEvent.delete)
-        }
-    )
-}
+    val snackbarHostState = remember { SnackbarHostState() }
 
-@Composable
-fun JugadorBodyScreen(
-    jugadores: List<Jugador>,
-    goToJugador: (Int) -> Unit,
-    createJugador: () -> Unit,
-    deleteJugador: (Jugador) -> Unit
-){
-    androidx.compose.material3.Scaffold(
+
+    LaunchedEffect(state.errorMessage) {
+        state.errorMessage?.takeIf { it.isNotEmpty() }?.let { message ->
+            snackbarHostState.showSnackbar(message)
+            viewModel.clearError()
+        }
+    }
+
+    val onDelete: (Jugador) -> Unit = { jugador ->
+        viewModel.onEvent(JugadorEvent.JugadorChange(jugador.id ?: 0))
+        viewModel.onEvent(JugadorEvent.delete)
+    }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
             FloatingActionButton(onClick = createJugador) {
                 Icon(Icons.Filled.Add, contentDescription = "Agregar jugador")
@@ -66,11 +69,11 @@ fun JugadorBodyScreen(
                 .padding(paddingValues)
                 .padding(16.dp)
         ) {
-            items(jugadores){ jugador ->
+            items(state.jugadores) { jugador ->
                 JugadorCardItem(
                     jugador = jugador,
-                    goToJugador = { goToJugador(jugador.id ?: 0) },
-                    deleteJugador = { deleteJugador(jugador) }
+                    goToJugador = { goToJugadores(jugador.id ?: 0) },
+                    deleteJugador = { onDelete(jugador) }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
@@ -82,13 +85,13 @@ fun JugadorBodyScreen(
 fun JugadorCardItem(
     jugador: Jugador,
     goToJugador: () -> Unit,
-    deleteJugador: (Jugador) -> Unit
+    deleteJugador: () -> Unit
 ){
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 4.dp),
-        elevation = CardDefaults.cardElevation(4.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -101,13 +104,16 @@ fun JugadorCardItem(
                 Text(text = jugador.nombre, fontSize = 14.sp)
                 Text(text = "${jugador.partidas} Partidas jugadas")
             }
+            Spacer(modifier = Modifier.width(8.dp))
             IconButton(onClick = goToJugador) {
                 Icon(Icons.Default.Edit, contentDescription = "Editar")
             }
-            IconButton(onClick = { deleteJugador(jugador) }) {
+            Spacer(modifier = Modifier.width(8.dp))
+            IconButton(onClick = deleteJugador) {
                 Icon(Icons.Default.Delete, contentDescription = "Eliminar")
             }
         }
     }
 }
+
 
