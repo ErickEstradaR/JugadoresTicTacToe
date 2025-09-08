@@ -50,7 +50,7 @@ fun JugadorScreen(
 
    JugadorBodyScreen(
         uiState = uiState,
-        viewModel::OnEvent,
+        viewModel::onEvent,
         goback = goback,
         viewModel = viewModel
     )

@@ -41,8 +41,8 @@ fun JugadorListScreen(
         goToJugador = { id -> goToJugadores(id)},
         createJugador = createJugador,
         deleteJugador = { jugador ->
-            viewModel.OnEvent(JugadorEvent.JugadorChange(jugador.id ?: 0))
-            viewModel.OnEvent(JugadorEvent.delete)
+            viewModel.onEvent(JugadorEvent.JugadorChange(jugador.id ?: 0))
+            viewModel.onEvent(JugadorEvent.delete)
         }
     )
 }
