@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.ucne.jugadorestictactoe.domain.model.Jugador
-import edu.ucne.jugadorestictactoe.domain.useCase.JugadorUseCases
+import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.JugadorUseCases
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
