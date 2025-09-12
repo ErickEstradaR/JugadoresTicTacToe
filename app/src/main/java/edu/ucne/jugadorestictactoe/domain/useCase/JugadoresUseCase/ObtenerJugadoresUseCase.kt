@@ -1,4 +1,4 @@
-package edu.ucne.jugadorestictactoe.domain.useCase
+package edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase
 
 import edu.ucne.jugadorestictactoe.domain.model.Jugador
 import edu.ucne.jugadorestictactoe.domain.repository.JugadorRepository
@@ -8,6 +8,6 @@ class ObtenerJugadoresUseCase(
     private val repository: JugadorRepository
 ) {
     operator fun invoke(): Flow<List<Jugador>> {
-        return repository.getAllFlow() 
+        return repository.getAllFlow()
     }
 }
