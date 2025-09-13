@@ -9,9 +9,8 @@ class GuardarPartidaUseCase(
 ) {
     suspend operator fun invoke(partida: Partida): Result<Boolean> {
         val validacion = validarPartidaUseCase(partida)
-        if (validacion.isFailure) {
+        if (validacion.isFailure)
             return Result.failure(validacion.exceptionOrNull()!!)
-        }
 
         val result = repository.save(partida)
         return Result.success(result)
