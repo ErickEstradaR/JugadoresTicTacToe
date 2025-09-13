@@ -13,7 +13,7 @@ import edu.ucne.jugadorestictactoe.data.local.partidas.Entity.PartidaEntity
         JugadorEntity::class,
         PartidaEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 
