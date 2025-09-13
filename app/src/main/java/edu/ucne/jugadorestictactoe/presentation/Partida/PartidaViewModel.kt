@@ -99,8 +99,14 @@ class PartidaViewModel @Inject constructor(
             esFinalizada = currentState.esFinalizada
         )
         return try {
-            useCases.guardarPartida(partida)
-            true
+            val result = useCases.guardarPartida(partida)
+
+            if (result.isFailure) {
+                _uiState.update { it.copy(errorMessage = result.exceptionOrNull()?.message ?: "Error desconocido") }
+                false
+            } else {
+                true
+            }
         } catch (e: Exception) {
             _uiState.update { it.copy(errorMessage = e.message ?: "Error desconocido") }
             false
