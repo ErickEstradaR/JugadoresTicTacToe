@@ -9,4 +9,6 @@ sealed class Screen{
 
     @Serializable
     data object List: Screen()
+    @Serializable
+    data object PartidaList: Screen()
 }
