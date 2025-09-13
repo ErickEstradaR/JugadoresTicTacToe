@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 
@@ -83,13 +85,18 @@ class PartidaViewModel @Inject constructor(
 
     suspend fun savePartida(): Boolean {
         val currentState = _uiState.value
+        val fecha = if (currentState.id == null || currentState.id == 0) {
+            LocalDate.now().format(DateTimeFormatter.ISO_DATE)
+        } else {
+            currentState.fecha
+        }
         val partida = Partida(
-            id = _uiState.value.id,
-            fecha = _uiState.value.fecha,
-            jugador1 = _uiState.value.jugador1,
-            jugador2 = _uiState.value.jugador2,
-            ganadorId = _uiState.value.ganadorId,
-            esFinalizada = _uiState.value.esFinalizada
+            id = currentState.id,
+            fecha = fecha,
+            jugador1 = currentState.jugador1,
+            jugador2 = currentState.jugador2,
+            ganadorId = currentState.ganadorId,
+            esFinalizada = currentState.esFinalizada
         )
         return try {
             useCases.guardarPartida(partida)
