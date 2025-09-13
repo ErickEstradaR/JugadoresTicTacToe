@@ -24,6 +24,7 @@ import edu.ucne.jugadorestictactoe.domain.useCase.PartidasUseCase.GuardarPartida
 import edu.ucne.jugadorestictactoe.domain.useCase.PartidasUseCase.ObtenerPartidaUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.PartidasUseCase.ObtenerPartidasUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.PartidasUseCase.PartidaUseCases
+import edu.ucne.jugadorestictactoe.domain.useCase.PartidasUseCase.ValidarPartidaUseCase
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -58,11 +59,14 @@ object AppModule {
         )}
     @Provides
     fun providePartidaUseCases(repository: PartidaRepository): PartidaUseCases{
+        val validarPartida = ValidarPartidaUseCase()
         return PartidaUseCases (
-            guardarPartida = GuardarPartidaUseCase(repository),
+            validarPartida = validarPartida,
+            guardarPartida = GuardarPartidaUseCase(repository,validarPartida),
             eliminarPartida = EliminarPartidaUseCase(repository),
             obtenerPartida = ObtenerPartidaUseCase(repository),
-            obtenerPartidas = ObtenerPartidasUseCase(repository)
+            obtenerPartidas = ObtenerPartidasUseCase(repository),
+
         )}
 
     @Module
