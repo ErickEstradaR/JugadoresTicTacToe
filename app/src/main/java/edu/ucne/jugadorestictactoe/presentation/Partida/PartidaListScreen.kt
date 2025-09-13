@@ -134,7 +134,7 @@ fun JugadorCardItem(
                         text = if (partida.esFinalizada)
                             "Ganador: ${partida.ganadorId}"
                         else
-                            "Todavía no hay un ganador",
+                            "",
                         fontSize = 14.sp
                     )
                 }
