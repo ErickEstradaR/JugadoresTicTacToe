@@ -151,3 +151,22 @@ fun JugadorCardItem(
         }
     }
 }
+@Preview(showBackground = true)
+@Composable
+fun PartidaListPreview() {
+    val partidasFake = listOf(
+        Partida(id = 1, fecha = "2025-09-14", jugador1 = 101, jugador2 = 102, ganadorId = 101, esFinalizada = true),
+        Partida(id = 2, fecha = "2025-09-13", jugador1 = 103, jugador2 = 104, ganadorId = null, esFinalizada = false)
+    )
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        partidasFake.forEach { partida ->
+            JugadorCardItem(
+                partida = partida,
+                goToPartida = {},
+                deletePartida = {}
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+    }
+}
