@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -162,5 +163,23 @@ fun PartidaBodyScreen(
             }
         }
     }
+}
+@Preview(showBackground = true)
+@Composable
+fun PartidaBodyScreenPreview() {
+    PartidaBodyScreen(
+        uiState = PartidaUiState(
+            id = 1,
+            fecha = "2025-09-14",
+            jugador1 = 101,
+            jugador2 = 102,
+            ganadorId = 101,
+            esFinalizada = true,
+            errorMessage = ""
+        ),
+        onAction = {},
+        goback = {},
+        savePartida = {}
+    )
 }
 
