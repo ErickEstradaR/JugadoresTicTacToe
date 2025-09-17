@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import edu.ucne.jugadorestictactoe.presentation.Navigation.HostNavigation
+import edu.ucne.jugadorestictactoe.presentation.Navigation.MainScreen
 import edu.ucne.jugadorestictactoe.ui.theme.JugadoresTicTacToeTheme
 
 @AndroidEntryPoint
@@ -21,16 +22,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             JugadoresTicTacToeTheme {
-                val nav = rememberNavController()
-                Scaffold(
-                    modifier = Modifier.fillMaxSize()
-                ) { innerPadding ->
-                    Box(
-                        modifier = Modifier.padding(innerPadding)
-                    ) {
-                        HostNavigation(nav)
-                    }
-                }
+                val navController = rememberNavController()
+
+
+                MainScreen(navController)
             }
         }
     }

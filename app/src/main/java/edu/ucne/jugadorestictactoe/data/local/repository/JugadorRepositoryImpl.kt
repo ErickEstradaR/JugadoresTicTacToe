@@ -1,10 +1,10 @@
-package edu.ucne.jugadorestictactoe.data.repository
+package edu.ucne.jugadorestictactoe.data.local.repository
 
-import edu.ucne.jugadorestictactoe.data.local.Dao.JugadorDao
-import edu.ucne.jugadorestictactoe.data.local.Entities.JugadorEntity
+import edu.ucne.jugadorestictactoe.data.local.jugadores.Dao.JugadorDao
+import edu.ucne.jugadorestictactoe.data.local.jugadores.Entities.JugadorEntity
 import edu.ucne.jugadorestictactoe.domain.model.Jugador
-import edu.ucne.jugadorestictactoe.data.mappers.toDomain
-import edu.ucne.jugadorestictactoe.data.mappers.toEntity
+import edu.ucne.jugadorestictactoe.data.local.mappers.toDomain
+import edu.ucne.jugadorestictactoe.data.local.mappers.toEntity
 import edu.ucne.jugadorestictactoe.domain.repository.JugadorRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
