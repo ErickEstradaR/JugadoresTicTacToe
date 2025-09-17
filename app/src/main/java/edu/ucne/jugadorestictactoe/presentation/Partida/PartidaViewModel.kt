@@ -66,7 +66,7 @@ class PartidaViewModel @Inject constructor(
                     if (partida != null) {
                         _uiState.update {
                             it.copy(
-                                id = partida?.id,
+                                id = partida.id,
                                 fecha = partida.fecha,
                                 jugador1 = partida.jugador1,
                                 jugador2 = partida.jugador2,
