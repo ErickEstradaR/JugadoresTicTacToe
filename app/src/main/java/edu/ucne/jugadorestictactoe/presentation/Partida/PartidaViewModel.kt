@@ -57,7 +57,6 @@ class PartidaViewModel @Inject constructor(
         }
     }
 
-
     fun findPartida(partidaId: Int) {
         viewModelScope.launch {
             if (partidaId > 0) {
