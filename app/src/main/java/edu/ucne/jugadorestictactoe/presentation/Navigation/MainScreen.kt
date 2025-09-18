@@ -53,6 +53,16 @@ fun MainScreen(navController: NavHostController) {
                               },
                     icon = { Icon(Icons.Default.PlayArrow, contentDescription = "Partidas") }
                 )
+
+                NavigationDrawerItem(
+                    label = { Text("Jugar") },
+                    selected = currentRoute == Screen.PartidaList::class.qualifiedName,
+                    onClick = {
+                        scope.launch { drawerState.close() }
+                        navController.navigate(Screen.GameScreen)
+                    },
+                    icon = { Icon(Icons.Default.PlayArrow, contentDescription = "Jugar") }
+                )
             }
         }
     ) {
