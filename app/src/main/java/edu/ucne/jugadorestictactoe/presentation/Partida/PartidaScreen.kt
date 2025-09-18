@@ -77,17 +77,6 @@ fun PartidaBodyScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            // Fecha
-            OutlinedTextField(
-                value = uiState.fecha,
-                onValueChange = { onAction(PartidaEvent.fechaChange(it)) },
-                label = { Text("Fecha de la partida") },
-                modifier = Modifier.fillMaxWidth(),
-                readOnly = true
-            )
-            Spacer(Modifier.height(16.dp))
-
-            // Jugador 1
             OutlinedTextField(
                 value = uiState.jugador1.toString(),
                 onValueChange = {
@@ -100,7 +89,6 @@ fun PartidaBodyScreen(
             )
             Spacer(Modifier.height(16.dp))
 
-            // Jugador 2
             OutlinedTextField(
                 value = uiState.jugador2.toString(),
                 onValueChange = {
