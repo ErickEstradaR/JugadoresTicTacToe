@@ -10,7 +10,7 @@ import edu.ucne.jugadorestictactoe.presentation.Jugador.JugadorListScreen
 import edu.ucne.jugadorestictactoe.presentation.Jugador.JugadorScreen
 import edu.ucne.jugadorestictactoe.presentation.Partida.PartidaListScreen
 import edu.ucne.jugadorestictactoe.presentation.Partida.PartidaScreen
-
+import edu.ucne.jugadorestictactoe.presentation.tictactoe.TicTacToeScreen
 
 @Composable
 fun HostNavigation(
@@ -50,7 +50,6 @@ fun HostNavigation(
                 jugadorId = jugadorId ?: 0,
                 goback = {navHostController.popBackStack()}
             )
-
         }
 
         composable<Screen.Partida> { backStack ->
@@ -60,6 +59,13 @@ fun HostNavigation(
                 goback = {navHostController.popBackStack()}
             )
         }
+
+        composable<Screen.GameScreen> {
+            TicTacToeScreen(
+            )
+        }
     }
 }
-
+//capa de datos: repositorio
+//capa de dominio: use cases
+//capa de presentacion: view models y pantallas
