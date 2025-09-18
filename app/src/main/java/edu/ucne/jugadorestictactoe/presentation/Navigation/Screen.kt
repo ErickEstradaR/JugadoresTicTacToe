@@ -11,4 +11,7 @@ sealed class Screen{
     data object List: Screen()
     @Serializable
     data object PartidaList: Screen()
+
+    @Serializable
+    data object GameScreen : Screen()
 }
