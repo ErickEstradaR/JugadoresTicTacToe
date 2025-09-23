@@ -1,7 +1,7 @@
 package edu.ucne.jugadorestictactoe.data.local.mappers
 
 import edu.ucne.jugadorestictactoe.data.local.jugadores.Entities.JugadorEntity
-import edu.ucne.jugadorestictactoe.data.local.logros.LogroEntity
+import edu.ucne.jugadorestictactoe.data.local.logros.entity.LogroEntity
 import edu.ucne.jugadorestictactoe.data.local.partidas.Entity.PartidaEntity
 import edu.ucne.jugadorestictactoe.domain.model.Jugador
 import edu.ucne.jugadorestictactoe.domain.model.Logro
