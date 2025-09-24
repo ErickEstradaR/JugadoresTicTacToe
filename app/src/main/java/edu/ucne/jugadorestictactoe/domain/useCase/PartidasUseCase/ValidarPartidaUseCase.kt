@@ -16,7 +16,6 @@ class ValidarPartidaUseCase(
                 return Result.failure(IllegalArgumentException("El ganador debe ser uno de los jugadores de la partida"))
             }
         }
-
         return Result.success(Unit)
     }
 }
