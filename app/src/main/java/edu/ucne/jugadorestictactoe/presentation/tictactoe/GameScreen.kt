@@ -6,37 +6,75 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import edu.ucne.jugadorestictactoe.ui.theme.JugadoresTicTacToeTheme
+import edu.ucne.jugadorestictactoe.domain.model.Jugador
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TicTacToeScreen(
     onDrawer: () -> Unit = {},
     viewModel: GameViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var selectingFor by remember { mutableStateOf<Player?>(null) }
 
-    TicTacToeBody(
-        state = state,
-        selectPlayer = viewModel::selectPlayer,
-        startGame = viewModel::startGame,
-        onCellClick = viewModel::onCellClick,
-        restartGame = viewModel::restartGame,
-    )
+    if (state.showPlayerList && selectingFor != null) {
+        ModalBottomSheet(
+            sheetState = sheetState,
+            onDismissRequest = { viewModel.hidePlayerList() }
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Text(
+                    "Selecciona jugador para ${selectingFor?.symbol}",
+                    style = MaterialTheme.typography.titleLarge
+                )
+                Spacer(Modifier.height(16.dp))
+
+                state.jugadores.forEach { jugador ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                if (selectingFor == Player.X) {
+                                    viewModel.selectPlayerForX(jugador)
+                                } else {
+                                    viewModel.selectPlayerForO(jugador)
+                                }
+                                viewModel.hidePlayerList()
+                                selectingFor = null
+                            }
+                            .padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(jugador.nombre, style = MaterialTheme.typography.bodyLarge)
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Composable
 private fun TicTacToeBody(
     state: GameUiState,
-    selectPlayer: (Player) -> Unit,
+    onSelectX: () -> Unit,
+    onSelectO: () -> Unit,
     startGame: () -> Unit,
     onCellClick: (Int) -> Unit,
     restartGame: () -> Unit,
@@ -51,40 +89,92 @@ private fun TicTacToeBody(
             verticalArrangement = Arrangement.Center
         ) {
             if (!state.gameStarted) {
-                PlayerSelectionScreen(
-                    selectedPlayer = state.playerSelection,
-                    onPlayerSelected = { selectPlayer(it) },
-                    onStartGame = { startGame() }
-                )
+                Text("Elige tus jugadores", fontSize = 28.sp, fontWeight = FontWeight.Bold)
+
+                Spacer(Modifier.height(24.dp))
+
+                Button(onClick = onSelectX) {
+                    Text("Seleccionar Jugador para X")
+                }
+
+                Spacer(Modifier.height(12.dp))
+
+                Button(onClick = onSelectO) {
+                    Text("Seleccionar Jugador para O")
+                }
+
+                Spacer(Modifier.height(24.dp))
+
+                Button(
+                    onClick = startGame,
+                    enabled = state.jugadorX != null && state.jugadorO != null
+                ) {
+                    Text("Iniciar Partida", fontSize = 18.sp)
+                }
             } else {
                 GameBoard(
                     uiState = state,
-                    onCellClick = { onCellClick(it) },
-                    onRestartGame = { restartGame() }
+                    onCellClick = onCellClick,
+                    onRestartGame = restartGame
                 )
             }
         }
     }
 }
 
+
 @Composable
 fun PlayerSelectionScreen(
-    selectedPlayer: Player?,
-    onPlayerSelected: (Player) -> Unit,
+    jugadores: List<Jugador>,
+    jugadorX: Jugador?,
+    jugadorO: Jugador?,
+    onSelectPlayerX: (Jugador) -> Unit,
+    onSelectPlayerO: (Jugador) -> Unit,
     onStartGame: () -> Unit
 ) {
-    Text("Elige tu jugador", fontSize = 28.sp, fontWeight = FontWeight.Bold)
-    Spacer(modifier = Modifier.height(24.dp))
-    Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-        Button(onClick = { onPlayerSelected(Player.X) }) { Text("Jugador X", fontSize = 18.sp) }
-        Button(onClick = { onPlayerSelected(Player.O) }) { Text("Jugador O", fontSize = 18.sp) }
-    }
-    Spacer(modifier = Modifier.height(24.dp))
-    Button(
-        onClick = onStartGame,
-        enabled = selectedPlayer != null
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Text("Iniciar Partida", fontSize = 18.sp)
+        Text("Elige tus jugadores", fontSize = 28.sp, fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Text("Selecciona jugador para X", fontSize = 20.sp, fontWeight = FontWeight.Medium)
+        Spacer(Modifier.height(8.dp))
+        jugadores.forEach { jugador ->
+            Button(
+                onClick = { onSelectPlayerX(jugador) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp)
+            ) {
+                Text(jugador.nombre)
+            }
+        }
+
+        Spacer(Modifier.height(24.dp))
+
+        Text("Selecciona jugador para O", fontSize = 20.sp, fontWeight = FontWeight.Medium)
+        Spacer(Modifier.height(8.dp))
+        jugadores.forEach { jugador ->
+            Button(
+                onClick = { onSelectPlayerO(jugador) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp)
+            ) {
+                Text(jugador.nombre)
+            }
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Button(
+            onClick = onStartGame,
+            enabled = jugadorX != null && jugadorO != null
+        ) {
+            Text("Iniciar Partida", fontSize = 18.sp)
+        }
     }
 }
 
@@ -95,9 +185,15 @@ fun GameBoard(
     onRestartGame: () -> Unit
 ) {
     val gameStatus = when {
-        uiState.winner != null -> "🏆 ¡Ganador: ${uiState.winner.symbol}!"
+        uiState.winner != null -> {
+            val ganador = if (uiState.winner == Player.X) uiState.jugadorX else uiState.jugadorO
+            "🏆 ¡Ganador: ${ganador?.nombre}!"
+        }
         uiState.isDraw -> "🤝 ¡Es un empate!"
-        else -> "Turno de: ${uiState.currentPlayer.symbol}"
+        else -> {
+            val turno = if (uiState.currentPlayer == Player.X) uiState.jugadorX else uiState.jugadorO
+            "Turno de: ${turno?.nombre}"
+        }
     }
     Text(text = gameStatus, fontSize = 24.sp, fontWeight = FontWeight.Bold)
     Spacer(modifier = Modifier.height(20.dp))
@@ -146,16 +242,4 @@ private fun BoardCell(
     }
 }
 
-@Preview
-@Composable
-private fun BoardPreview() {
-    JugadoresTicTacToeTheme {
-        TicTacToeBody(
-            state = GameUiState(),
-            selectPlayer = {},
-            startGame = {},
-            onCellClick = {},
-            restartGame = {}
-        )
-    }
-}
+
