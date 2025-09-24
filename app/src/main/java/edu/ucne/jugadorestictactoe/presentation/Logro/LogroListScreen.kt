@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -114,6 +115,43 @@ fun LogroCardItem(
             IconButton(onClick = deleteLogro) {
                 Icon(Icons.Default.Delete, contentDescription = "Eliminar")
             }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewLogroCardItem() {
+    LogroCardItem(
+        logro = Logro(
+            id = 1,
+            nombre = "Logro de prueba",
+            descripcion = "Este es un logro de ejemplo"
+        ),
+        goToLogro = {},
+        deleteLogro = {}
+    )
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun PreviewLogroList() {
+    val fakeLogros = listOf(
+        Logro(1, "Primer Logro", "Descripción corta del logro"),
+        Logro(2, "Segundo Logro", "Otro logro de prueba"),
+        Logro(3, "Tercer Logro", "Este es un logro más largo para probar el diseño")
+    )
+
+    LazyColumn(
+        modifier = Modifier.padding(16.dp)
+    ) {
+        items(fakeLogros) { logro ->
+            LogroCardItem(
+                logro = logro,
+                goToLogro = {},
+                deleteLogro = {}
+            )
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
