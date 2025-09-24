@@ -1,7 +1,6 @@
 package edu.ucne.jugadorestictactoe.domain.useCase.LogrosUseCase
 
 import edu.ucne.jugadorestictactoe.domain.model.Logro
-
 import edu.ucne.jugadorestictactoe.domain.repository.LogroRepository
 
 class ObtenerLogroUseCase (
