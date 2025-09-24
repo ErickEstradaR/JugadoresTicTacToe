@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -128,4 +129,19 @@ fun LogroBodyScreen(
             }
         }
     }
+}
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun PreviewLogroBodyScreen() {
+    LogroBodyScreen(
+        uiState = LogroUiState(
+            logroId = 1,
+            nombre = "Primer Logro",
+            descripcion = "Descripción de prueba para el logro",
+            errorMessage = null
+        ),
+        onAction = {},
+        goback = {},
+        saveLogro = { }
+    )
 }
