@@ -104,7 +104,7 @@ fun LogroCardItem(
             Column(modifier = Modifier.weight(1f).padding(start = 8.dp)) {
                 Text(text = "Id: ${logro.id}", fontWeight = FontWeight.Bold)
                 Text(text = logro.nombre, fontSize = 14.sp)
-                Text(text = "${logro.descripcion} Descripcion")
+                Text(text = "${logro.descripcion}")
             }
             Spacer(modifier = Modifier.width(8.dp))
             IconButton(onClick = goToLogro) {
