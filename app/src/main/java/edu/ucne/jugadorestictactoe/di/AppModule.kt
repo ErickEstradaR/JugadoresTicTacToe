@@ -21,6 +21,11 @@ import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.JugadorUseCas
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.ObtenerJugadorUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.ObtenerJugadoresUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.ValidarJugadorUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.LogrosUseCase.EliminarLogroUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.LogrosUseCase.GuardarLogroUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.LogrosUseCase.LogrosUseCases
+import edu.ucne.jugadorestictactoe.domain.useCase.LogrosUseCase.ObtenerLogroUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.LogrosUseCase.ObtenerLogrosUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.PartidasUseCase.EliminarPartidaUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.PartidasUseCase.GuardarPartidaUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.PartidasUseCase.ObtenerPartidaUseCase
@@ -48,6 +53,8 @@ object AppModule {
     fun providesJugadorDao(jugadorDb: JugadorDb) = jugadorDb.JugadorDao()
     @Provides
     fun providesPartidaDao(jugadorDb: JugadorDb)= jugadorDb.PartidaDao()
+    @Provides
+    fun providesLogroDao(jugadorDb: JugadorDb)= jugadorDb.LogroDao()
 
     @Provides
     fun provideJugadorUseCases(repository: JugadorRepository): JugadorUseCases {
@@ -68,8 +75,17 @@ object AppModule {
             eliminarPartida = EliminarPartidaUseCase(repository),
             obtenerPartida = ObtenerPartidaUseCase(repository),
             obtenerPartidas = ObtenerPartidasUseCase(repository),
-
         )}
+
+    @Provides
+    fun provideLogroUseCases(repository: LogroRepository): LogrosUseCases{
+        return LogrosUseCases(
+            guardarLogro = GuardarLogroUseCase(repository),
+            obtenerLogros = ObtenerLogrosUseCase(repository),
+            eliminarLogro = EliminarLogroUseCase(repository),
+            obtenerLogro = ObtenerLogroUseCase(repository)
+        )
+    }
 
     @Module
     @InstallIn(SingletonComponent::class)
