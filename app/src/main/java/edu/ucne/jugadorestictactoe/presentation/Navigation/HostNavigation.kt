@@ -8,6 +8,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import edu.ucne.jugadorestictactoe.presentation.Jugador.JugadorListScreen
 import edu.ucne.jugadorestictactoe.presentation.Jugador.JugadorScreen
+import edu.ucne.jugadorestictactoe.presentation.Logro.LogroScreen
+import edu.ucne.jugadorestictactoe.presentation.Logro.LogrolistScreen
 import edu.ucne.jugadorestictactoe.presentation.Partida.PartidaListScreen
 import edu.ucne.jugadorestictactoe.presentation.Partida.PartidaScreen
 import edu.ucne.jugadorestictactoe.presentation.tictactoe.TicTacToeScreen
@@ -52,6 +54,25 @@ fun HostNavigation(
             )
         }
 
+        composable<Screen.Logro> { backStack ->
+            val logroId = backStack.toRoute<Screen.Logro>().id
+            LogroScreen(
+                logroId = logroId ?: 0,
+                goback = {navHostController.popBackStack()}
+            )
+        }
+
+        composable<Screen.LogroList> {
+            LogrolistScreen(
+                goToLogro = {id ->
+                    navHostController.navigate(Screen.Logro(id))
+                },
+                createLogro = {
+                    navHostController.navigate(Screen.Logro(null))
+                }
+            )
+        }
+
         composable<Screen.Partida> { backStack ->
             val partidaId = backStack.toRoute<Screen.Partida>().Id
             PartidaScreen(
@@ -66,6 +87,4 @@ fun HostNavigation(
         }
     }
 }
-//capa de datos: repositorio
-//capa de dominio: use cases
-//capa de presentacion: view models y pantallas
+
