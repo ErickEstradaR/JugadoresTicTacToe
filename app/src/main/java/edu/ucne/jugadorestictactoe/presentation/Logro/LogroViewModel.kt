@@ -5,8 +5,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.ucne.jugadorestictactoe.domain.model.Logro
 import edu.ucne.jugadorestictactoe.domain.useCase.LogrosUseCase.LogrosUseCases
-import edu.ucne.jugadorestictactoe.presentation.Logro.LogroEvent
-import edu.ucne.jugadorestictactoe.presentation.Jugador.JugadorUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -52,7 +50,6 @@ class LogroViewModel @Inject constructor(
             }
         }
     }
-
 
     fun findLogro(logroId: Int) {
         viewModelScope.launch {
