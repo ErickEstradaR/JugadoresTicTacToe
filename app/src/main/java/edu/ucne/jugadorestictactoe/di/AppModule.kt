@@ -10,8 +10,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import edu.ucne.jugadorestictactoe.data.Database.JugadorDb
 import edu.ucne.jugadorestictactoe.data.local.repository.JugadorRepositoryImpl
+import edu.ucne.jugadorestictactoe.data.local.repository.LogroRepositoryImpl
 import edu.ucne.jugadorestictactoe.data.local.repository.PartidaRepositoryImpl
 import edu.ucne.jugadorestictactoe.domain.repository.JugadorRepository
+import edu.ucne.jugadorestictactoe.domain.repository.LogroRepository
 import edu.ucne.jugadorestictactoe.domain.repository.PartidaRepository
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.EliminarJugadorUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.GuardarJugadorUseCase
@@ -85,6 +87,12 @@ object AppModule {
         abstract fun bindPartidaRepository(
             impl: PartidaRepositoryImpl
         ): PartidaRepository
+
+        @Binds
+        @Singleton
+        abstract fun bindLogroRepository(
+            impl: LogroRepositoryImpl
+        ): LogroRepository
     }
 }
 
