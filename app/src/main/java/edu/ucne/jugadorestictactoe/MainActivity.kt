@@ -23,8 +23,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             JugadoresTicTacToeTheme {
                 val navController = rememberNavController()
-
-
                 MainScreen(navController)
             }
         }
