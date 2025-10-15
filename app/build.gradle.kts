@@ -53,26 +53,27 @@ dependencies {
     implementation(libs.androidx.activity.ktx)
     annotationProcessor(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
-    testImplementation("io.mockk:mockk:1.13.13")
-    testImplementation("app.cash.turbine:turbine:1.0.0")
-    testImplementation("com.google.truth:truth:1.1.5")
+
+
     implementation(libs.androidx.foundation)
+
+    //optional
     implementation(libs.androidx.room.ktx)
     implementation(libs.material3)
     implementation (libs.androidx.material)
-    implementation(libs.androidx.material.v131)
-    androidTestImplementation(platform(libs.androidx.compose.bom)) // BOM
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4") // testing
-    debugImplementation("androidx.compose.ui:ui-test-manifest") // para previews
-    debugImplementation("androidx.compose.ui:ui-tooling") // para previews
+    implementation(libs.androidx.material.v131) // Usa la última versión
+
+
 
     //Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.moshi:moshi-kotlin:1.14.0")
+    implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -83,27 +84,11 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     testImplementation(libs.junit)
-
-    
-    implementation(platform("androidx.compose:compose-bom:2025.09.1"))
-
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.activity:activity-compose:1.8.2")
-
-    androidTestImplementation(platform("androidx.compose:compose-bom:2025.09.1"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    testImplementation(kotlin("test"))
-
 
 }
