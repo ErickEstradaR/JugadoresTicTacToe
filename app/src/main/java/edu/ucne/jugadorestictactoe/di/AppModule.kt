@@ -12,9 +12,11 @@ import edu.ucne.jugadorestictactoe.data.Database.JugadorDb
 import edu.ucne.jugadorestictactoe.data.local.repository.JugadorRepositoryImpl
 import edu.ucne.jugadorestictactoe.data.local.repository.LogroRepositoryImpl
 import edu.ucne.jugadorestictactoe.data.local.repository.PartidaRepositoryImpl
+import edu.ucne.jugadorestictactoe.data.local.repository.TecnicoRepositoryImpl
 import edu.ucne.jugadorestictactoe.domain.repository.JugadorRepository
 import edu.ucne.jugadorestictactoe.domain.repository.LogroRepository
 import edu.ucne.jugadorestictactoe.domain.repository.PartidaRepository
+import edu.ucne.jugadorestictactoe.domain.repository.TecnicoRepository
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.EliminarJugadorUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.GuardarJugadorUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.JugadorUseCases
@@ -32,6 +34,11 @@ import edu.ucne.jugadorestictactoe.domain.useCase.PartidasUseCase.ObtenerPartida
 import edu.ucne.jugadorestictactoe.domain.useCase.PartidasUseCase.ObtenerPartidasUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.PartidasUseCase.PartidaUseCases
 import edu.ucne.jugadorestictactoe.domain.useCase.PartidasUseCase.ValidarPartidaUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.TecnicoUseCase.EliminarTecnicoUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.TecnicoUseCase.GuardarTecnicoUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.TecnicoUseCase.ObtenerTecnicoUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.TecnicoUseCase.ObtenerTecnicosUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.TecnicoUseCase.TecnicoUseCases
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -87,6 +94,16 @@ object AppModule {
         )
     }
 
+    @Provides
+    fun provideTecnicoUseCases(repository: TecnicoRepository): TecnicoUseCases {
+        return TecnicoUseCases(
+            obtenerTecnicos = ObtenerTecnicosUseCase(repository),
+            obtenerTecnico = ObtenerTecnicoUseCase(repository),
+            guardarTecnico = GuardarTecnicoUseCase(repository),
+            eliminarTecnico = EliminarTecnicoUseCase(repository)
+        )
+    }
+
     @Module
     @InstallIn(SingletonComponent::class)
 
@@ -103,6 +120,12 @@ object AppModule {
         abstract fun bindPartidaRepository(
             impl: PartidaRepositoryImpl
         ): PartidaRepository
+
+        @Binds
+        @Singleton
+        abstract fun bindTecnicoRepository(
+            impl: TecnicoRepositoryImpl
+        ): TecnicoRepository
 
         @Binds
         @Singleton
