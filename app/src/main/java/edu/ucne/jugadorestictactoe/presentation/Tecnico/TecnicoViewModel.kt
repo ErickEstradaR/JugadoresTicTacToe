@@ -20,6 +20,7 @@ class TecnicoViewModel @Inject constructor(
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(TecnicoUiState.default())
+    private val DEFAULT_ERROR_MESSAGE = "Error desconocido"
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -48,8 +49,7 @@ class TecnicoViewModel @Inject constructor(
                     _uiState.update { it.copy(tecnicos = lista) }
                 }
             } catch (e: Exception) {
-                _uiState.update { it.copy(errorMessage = e.message ?: "Error desconocido") }
-            }
+                _uiState.update { it.copy(errorMessage = e.message ?: DEFAULT_ERROR_MESSAGE) }            }
         }
     }
 
@@ -67,8 +67,7 @@ class TecnicoViewModel @Inject constructor(
                         )
                     }
                 } catch (e: Exception) {
-                    _uiState.update { it.copy(errorMessage = e.message ?: "Error desconocido") }
-                }
+                    _uiState.update { it.copy(errorMessage = e.message ?: DEFAULT_ERROR_MESSAGE) }                }
             }
         }
     }
@@ -85,7 +84,7 @@ class TecnicoViewModel @Inject constructor(
             getTecnicos()
             true
         } catch (e: Exception) {
-            _uiState.update { it.copy(errorMessage = e.message ?: "Error desconocido") }
+            _uiState.update { it.copy(errorMessage = e.message ?: DEFAULT_ERROR_MESSAGE) }
             false
         }
     }
@@ -101,8 +100,7 @@ class TecnicoViewModel @Inject constructor(
                 useCases.eliminarTecnico(tecnico.tecnicoId)
                 getTecnicos()
             } catch (e: Exception) {
-                _uiState.update { it.copy(errorMessage = e.message ?: "Error desconocido") }
-            }
+                _uiState.update { it.copy(errorMessage = e.message ?: DEFAULT_ERROR_MESSAGE) }            }
         }
     }
 
