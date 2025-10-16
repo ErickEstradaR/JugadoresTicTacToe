@@ -3,9 +3,13 @@ package edu.ucne.jugadorestictactoe.data.local.mappers
 import edu.ucne.jugadorestictactoe.data.local.jugadores.Entities.JugadorEntity
 import edu.ucne.jugadorestictactoe.data.local.logros.entity.LogroEntity
 import edu.ucne.jugadorestictactoe.data.local.partidas.Entity.PartidaEntity
+import edu.ucne.jugadorestictactoe.data.remote.dto.partida.MovimientoDto
+import edu.ucne.jugadorestictactoe.data.remote.dto.partida.PartidaDto
 import edu.ucne.jugadorestictactoe.domain.model.Jugador
 import edu.ucne.jugadorestictactoe.domain.model.Logro
+import edu.ucne.jugadorestictactoe.domain.model.Movimiento
 import edu.ucne.jugadorestictactoe.domain.model.Partida
+import edu.ucne.jugadorestictactoe.domain.model.PartidaApi
 
 
 fun JugadorEntity.toDomain() = Jugador(
@@ -49,5 +53,34 @@ fun JugadorEntity.toDomain() = Jugador(
         nombre = nombre,
         descripcion = descripcion
     )
+
+    fun PartidaDto.toDomain() = PartidaApi (
+            PartidaId = PartidaId,
+            Jugador1Id = Jugador1Id,
+            Jugador2Id = Jugador2Id
+        )
+
+
+    fun PartidaApi.toDto() = PartidaDto(
+        PartidaId = PartidaId,
+        Jugador1Id = Jugador1Id,
+        Jugador2Id = Jugador2Id
+        )
+
+    fun Movimiento.toDto() = MovimientoDto(
+        PartidaId = PartidaId,
+        Jugador = Jugador,
+        PosicionFila = PosicionFila,
+        PosicionColumna = PosicionColumna
+    )
+
+    fun MovimientoDto.toDomain() = Movimiento(
+        PartidaId = PartidaId,
+        Jugador = Jugador,
+        PosicionFila = PosicionFila,
+        PosicionColumna = PosicionColumna
+    )
+
+
 
 
