@@ -6,8 +6,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import edu.ucne.jugadorestictactoe.data.remote.dto.TecnicoApi
-import edu.ucne.jugadorestictactoe.data.remote.dto.TecnicosApiService
+import edu.ucne.jugadorestictactoe.data.remote.dto.Tecnico.TecnicosApiService
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
