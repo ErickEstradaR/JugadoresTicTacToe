@@ -1,7 +1,10 @@
 package edu.ucne.jugadorestictactoe.presentation.Navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -14,6 +17,8 @@ import edu.ucne.jugadorestictactoe.presentation.Partida.PartidaListScreen
 import edu.ucne.jugadorestictactoe.presentation.Partida.PartidaScreen
 import edu.ucne.jugadorestictactoe.presentation.Tecnico.TecnicoListScreen
 import edu.ucne.jugadorestictactoe.presentation.Tecnico.TecnicoScreen
+import edu.ucne.jugadorestictactoe.presentation.tictactoe.GameViewModel
+import edu.ucne.jugadorestictactoe.presentation.tictactoe.PlayerSelectionScreen
 import edu.ucne.jugadorestictactoe.presentation.tictactoe.TicTacToeScreen
 
 @Composable
@@ -53,6 +58,16 @@ fun HostNavigation(
             JugadorScreen(
                 jugadorId = jugadorId ?: 0,
                 goback = {navHostController.popBackStack()}
+            )
+        }
+
+        composable<Screen.GameScreen> { backStack ->
+            val viewModel: GameViewModel = hiltViewModel()
+            val state by viewModel.state.collectAsStateWithLifecycle()
+            PlayerSelectionScreen(
+                selectedPlayer = state.playerSelection,
+                onPlayerSelected = viewModel::selectPlayer,
+                onStartGame = viewModel::startGame
             )
         }
 
