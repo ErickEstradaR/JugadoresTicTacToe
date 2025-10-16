@@ -3,9 +3,11 @@ package edu.ucne.jugadorestictactoe.data.local.mappers
 import edu.ucne.jugadorestictactoe.data.local.jugadores.Entities.JugadorEntity
 import edu.ucne.jugadorestictactoe.data.local.logros.entity.LogroEntity
 import edu.ucne.jugadorestictactoe.data.local.partidas.Entity.PartidaEntity
+import edu.ucne.jugadorestictactoe.data.remote.dto.partida.JugadorDto
 import edu.ucne.jugadorestictactoe.data.remote.dto.partida.MovimientoDto
 import edu.ucne.jugadorestictactoe.data.remote.dto.partida.PartidaDto
 import edu.ucne.jugadorestictactoe.domain.model.Jugador
+import edu.ucne.jugadorestictactoe.domain.model.JugadorApi
 import edu.ucne.jugadorestictactoe.domain.model.Logro
 import edu.ucne.jugadorestictactoe.domain.model.Movimiento
 import edu.ucne.jugadorestictactoe.domain.model.Partida
@@ -55,30 +57,88 @@ fun JugadorEntity.toDomain() = Jugador(
     )
 
     fun PartidaDto.toDomain() = PartidaApi (
-            PartidaId = PartidaId,
-            Jugador1Id = Jugador1Id,
-            Jugador2Id = Jugador2Id
+        PartidaId = PartidaId,
+        Jugador1Id = Jugador1Id,
+        Jugador2Id = Jugador2Id,
+        EstadoPartida = EstadoPartida,
+        GanadorId = GanadorId,
+        TurnoJugadorId = TurnoJugadorId,
+        EstadoTablero = EstadoTablero,
+        FechaInicio = FechaInicio,
+        FechaFin = FechaFin,
+        Jugador1 = Jugador1,
+        Jugador2 = Jugador2,
+        Ganador = Ganador,
+        TurnoJugador = TurnoJugador,
+        Movimientos = Movimientos?.map { it.toDomain() }
         )
 
 
     fun PartidaApi.toDto() = PartidaDto(
         PartidaId = PartidaId,
         Jugador1Id = Jugador1Id,
-        Jugador2Id = Jugador2Id
+        Jugador2Id = Jugador2Id,
+        EstadoPartida = EstadoPartida,
+        GanadorId = GanadorId,
+        TurnoJugadorId = TurnoJugadorId,
+        EstadoTablero = EstadoTablero,
+        FechaInicio = FechaInicio,
+        FechaFin = FechaFin,
+        Jugador1 = Jugador1,
+        Jugador2 = Jugador2,
+        Ganador = Ganador,
+        TurnoJugador = TurnoJugador,
+        Movimientos = Movimientos?.map { it.toDto() }
         )
 
     fun Movimiento.toDto() = MovimientoDto(
-        PartidaId = PartidaId,
-        Jugador = Jugador,
-        PosicionFila = PosicionFila,
-        PosicionColumna = PosicionColumna
+        MovimientoId = MovimientoId,
+        PartidaId=PartidaId,
+        JugadorId=JugadorId,
+        PosicionFila=PosicionFila,
+        PosicionColumna=PosicionColumna,
+        FechaMovimiento=FechaMovimiento,
+        Partida=Partida,
+        Jugador=Jugador
     )
 
     fun MovimientoDto.toDomain() = Movimiento(
-        PartidaId = PartidaId,
-        Jugador = Jugador,
-        PosicionFila = PosicionFila,
-        PosicionColumna = PosicionColumna
+        MovimientoId = MovimientoId,
+        PartidaId=PartidaId,
+        JugadorId=JugadorId,
+        PosicionFila=PosicionFila,
+        PosicionColumna=PosicionColumna,
+        FechaMovimiento=FechaMovimiento,
+        Partida=Partida,
+        Jugador=Jugador
+    )
+
+    fun JugadorDto.toDomain()= JugadorApi(
+        JugadorId = JugadorId,
+        Nombres = Nombres,
+        Email = Email,
+        FechaCreacion = FechaCreacion,
+        Victorias = Victorias,
+        Derrotas = Derrotas,
+        Empates = Empates,
+        PartidasComoJugador1 = PartidasComoJugador1?.map { it.toDomain() },
+        PartidasComoJugador2 = PartidasComoJugador2?.map { it.toDomain() },
+        PartidasGanadas = PartidasGanadas?.map { it.toDomain() },
+        Movimientos = Movimientos?.map { it.toDomain() }
+    )
+
+    fun JugadorApi.toDto()= JugadorDto(
+        JugadorId = JugadorId,
+        Nombres = Nombres,
+        Email = Email,
+        FechaCreacion = FechaCreacion,
+        Victorias = Victorias,
+        Derrotas = Derrotas,
+        Empates = Empates,
+        PartidasComoJugador1 = PartidasComoJugador1?.map { it.toDto() },
+        PartidasComoJugador2 = PartidasComoJugador2?.map { it.toDto() },
+        PartidasGanadas = PartidasGanadas?.map { it.toDto() },
+        Movimientos = Movimientos?.map { it.toDto() }
     )
 
 
