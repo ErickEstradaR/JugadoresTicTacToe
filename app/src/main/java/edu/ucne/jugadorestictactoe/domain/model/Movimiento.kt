@@ -1,8 +1,12 @@
 package edu.ucne.jugadorestictactoe.domain.model
 
 data class Movimiento (
-    val PartidaId : Int,
-    val Jugador : String = "X",
-    val PosicionFila : Int,
-    val PosicionColumna : Int
+    val MovimientoId: Int?,
+    val PartidaId: Int?,
+    val JugadorId: Int?,
+    val PosicionFila: Int?,
+    val PosicionColumna: Int?,
+    val FechaMovimiento: String?,
+    val Partida: String?,
+    val Jugador: String?
 )
