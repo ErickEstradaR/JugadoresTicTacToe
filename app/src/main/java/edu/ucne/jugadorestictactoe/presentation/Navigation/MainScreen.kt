@@ -74,6 +74,16 @@ fun MainScreen(navController: NavHostController) {
                     },
                     icon = { Icon(Icons.Default.Star, contentDescription = "Logros") }
                 )
+
+                NavigationDrawerItem(
+                    label = { Text("Jugar") },
+                    selected = currentRoute == Screen.GameScreen::class.qualifiedName,
+                    onClick = {
+                        scope.launch { drawerState.close() }
+                        navController.navigate(Screen.GameScreen)
+                    },
+                    icon = { Icon(Icons.Default.Star, contentDescription = "Jugar") }
+                )
             }
         }
     ) {
