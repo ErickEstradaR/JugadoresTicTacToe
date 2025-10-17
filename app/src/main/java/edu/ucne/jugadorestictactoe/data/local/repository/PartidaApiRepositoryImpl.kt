@@ -23,7 +23,20 @@ class PartidaApiRepositoryImpl @Inject constructor(
             val newPartidaDto = PartidaDto(
                 PartidaId = 0,
                 Jugador1Id = player1Id,
-                Jugador2Id = null
+                Jugador2Id = null,
+                EstadoPartida = "PENDIENTE",
+                GanadorId = null,
+                TurnoJugadorId = player1Id,
+                EstadoTablero = ".........",
+                FechaInicio = null,
+                FechaFin = null,
+
+                Jugador1 = null,
+                Jugador2 = null,
+                Ganador = null,
+                TurnoJugador = null,
+
+                Movimientos = emptyList()
             )
             return api.createPartida(newPartidaDto).toDomain()
         }
