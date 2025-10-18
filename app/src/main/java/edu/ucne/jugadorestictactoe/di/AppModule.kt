@@ -9,14 +9,20 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import edu.ucne.jugadorestictactoe.data.Database.JugadorDb
+import edu.ucne.jugadorestictactoe.data.local.repository.JugadorApiRepositoryImpl
 import edu.ucne.jugadorestictactoe.data.local.repository.JugadorRepositoryImpl
 import edu.ucne.jugadorestictactoe.data.local.repository.LogroRepositoryImpl
 import edu.ucne.jugadorestictactoe.data.local.repository.PartidaRepositoryImpl
 import edu.ucne.jugadorestictactoe.data.local.repository.TecnicoRepositoryImpl
+import edu.ucne.jugadorestictactoe.domain.repository.JugadorApiRepository
 import edu.ucne.jugadorestictactoe.domain.repository.JugadorRepository
 import edu.ucne.jugadorestictactoe.domain.repository.LogroRepository
 import edu.ucne.jugadorestictactoe.domain.repository.PartidaRepository
 import edu.ucne.jugadorestictactoe.domain.repository.TecnicoRepository
+import edu.ucne.jugadorestictactoe.domain.useCase.GameUseCases.JugadorApiUseCases.GuardarJugadorApiUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.GameUseCases.JugadorApiUseCases.JugadoresUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.GameUseCases.JugadorApiUseCases.ObtenerJugadorApiUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.GameUseCases.JugadorApiUseCases.ObtenerJugadoresApiUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.EliminarJugadorUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.GuardarJugadorUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.JugadorUseCases
@@ -104,6 +110,16 @@ object AppModule {
         )
     }
 
+    @Provides
+    fun provideJugadorApiUseCases(repository: JugadorApiRepository): JugadoresUseCase {
+        return JugadoresUseCase(
+            obtenerJugadores = ObtenerJugadoresApiUseCase(repository),
+            obtenerJugador = ObtenerJugadorApiUseCase(repository),
+            guardarJugador = GuardarJugadorApiUseCase(repository)
+        )
+    }
+
+
     @Module
     @InstallIn(SingletonComponent::class)
 
@@ -126,6 +142,12 @@ object AppModule {
         abstract fun bindTecnicoRepository(
             impl: TecnicoRepositoryImpl
         ): TecnicoRepository
+
+        @Binds
+        @Singleton
+        abstract fun bindJugadorApiRepository(
+            impl: JugadorApiRepositoryImpl
+        ): JugadorApiRepository
 
         @Binds
         @Singleton
