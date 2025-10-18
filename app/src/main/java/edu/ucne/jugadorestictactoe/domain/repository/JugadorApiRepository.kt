@@ -1,7 +1,7 @@
 package edu.ucne.jugadorestictactoe.domain.repository
 
-import edu.ucne.jugadorestictactoe.domain.model.Jugador
 import edu.ucne.jugadorestictactoe.domain.model.JugadorApi
+import kotlinx.coroutines.flow.Flow
 
 interface JugadorApiRepository {
     suspend fun getJugadores(): List<JugadorApi>
@@ -11,5 +11,7 @@ interface JugadorApiRepository {
     suspend fun createJugador(jugador: JugadorApi)
 
     suspend fun updateJugador(jugador: JugadorApi)
+
+    fun getAllFlow(): Flow<List<JugadorApi>>
 
 }
