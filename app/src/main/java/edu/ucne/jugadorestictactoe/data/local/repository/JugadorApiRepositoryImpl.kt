@@ -5,6 +5,8 @@ import edu.ucne.jugadorestictactoe.data.local.mappers.toDto
 import edu.ucne.jugadorestictactoe.data.remote.dto.partidaApi.JugadorApiService
 import edu.ucne.jugadorestictactoe.domain.model.JugadorApi
 import edu.ucne.jugadorestictactoe.domain.repository.JugadorApiRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 
@@ -28,6 +30,15 @@ class JugadorApiRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateJugador(jugador: JugadorApi) {
-        apiService.updateJugador(jugador.JugadorId, jugador.toDto())
+        apiService.updateJugador(jugador.jugadorId, jugador.toDto())
+    }
+
+    override fun getAllFlow(): Flow<List<JugadorApi>> = flow {
+        try {
+            val JugadorApi = apiService.getJugadores()
+            emit(JugadorApi.map { it.toDomain() })
+        } catch (e: Exception) {
+            emit(emptyList())
+        }
     }
 }
