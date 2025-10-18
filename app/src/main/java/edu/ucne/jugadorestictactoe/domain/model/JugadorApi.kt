@@ -1,22 +1,18 @@
 package edu.ucne.jugadorestictactoe.domain.model
 
-
-
 data class JugadorApi (
-    val JugadorId: Int?,
-    val Nombres: String?,
-    val Email: String?,
+    val jugadorId: Int? = null,
+    val nombres: String,
+    val email: String,
+    val fechaCreacion: String?,
+    val victorias: Int?,
+    val derrotas: Int?,
+    val empates: Int?,
+
+    val partidasComoJugador1: List<PartidaApi>?,
+    val partidasComoJugador2: List<PartidaApi>?,
+    val partidasGanadas: List<PartidaApi>?,
 
 
-    val FechaCreacion: String?,
-    val Victorias: Int?,
-    val Derrotas: Int?,
-    val Empates: Int?,
-
-    val PartidasComoJugador1: List<PartidaApi>?,
-    val PartidasComoJugador2: List<PartidaApi>?,
-    val PartidasGanadas: List<PartidaApi>?,
-
-
-    val Movimientos: List<Movimiento>?
+    val movimientos: List<Movimiento>?
 )
