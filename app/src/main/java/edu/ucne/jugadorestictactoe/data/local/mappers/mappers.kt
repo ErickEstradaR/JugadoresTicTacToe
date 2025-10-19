@@ -56,7 +56,7 @@ fun JugadorEntity.toDomain() = Jugador(
         descripcion = descripcion
     )
 
-    fun PartidaDto.toDomain() = PartidaApi (
+    fun PartidaDto.toDomain() = PartidaApi(
         PartidaId = PartidaId,
         Jugador1Id = Jugador1Id,
         Jugador2Id = Jugador2Id,
@@ -66,12 +66,12 @@ fun JugadorEntity.toDomain() = Jugador(
         EstadoTablero = EstadoTablero,
         FechaInicio = FechaInicio,
         FechaFin = FechaFin,
+        Movimientos = Movimientos?.map { it.toDomain() },
         Jugador1 = Jugador1,
-        Jugador2 = Jugador2,
-        Ganador = Ganador,
         TurnoJugador = TurnoJugador,
-        Movimientos = Movimientos?.map { it.toDomain() }
-        )
+        Jugador2 = Jugador2,
+        Ganador = Ganador
+    )
 
 
     fun PartidaApi.toDto() = PartidaDto(
@@ -84,61 +84,35 @@ fun JugadorEntity.toDomain() = Jugador(
         EstadoTablero = EstadoTablero,
         FechaInicio = FechaInicio,
         FechaFin = FechaFin,
+        Movimientos = Movimientos?.map { it.toDto() },
         Jugador1 = Jugador1,
-        Jugador2 = Jugador2,
-        Ganador = Ganador,
         TurnoJugador = TurnoJugador,
-        Movimientos = Movimientos?.map { it.toDto() }
+        Jugador2 = Jugador2,
+        Ganador = Ganador
         )
 
     fun Movimiento.toDto() = MovimientoDto(
-        MovimientoId = MovimientoId,
-        PartidaId=PartidaId,
-        JugadorId=JugadorId,
-        PosicionFila=PosicionFila,
-        PosicionColumna=PosicionColumna,
-        FechaMovimiento=FechaMovimiento,
-        Partida=Partida,
-        Jugador=Jugador
+        partidaId = partidaId,
+        jugador = jugador,
+        posicionFila = posicionFila,
+        posicionColumna = posicionColumna
     )
 
     fun MovimientoDto.toDomain() = Movimiento(
-        MovimientoId = MovimientoId,
-        PartidaId=PartidaId,
-        JugadorId=JugadorId,
-        PosicionFila=PosicionFila,
-        PosicionColumna=PosicionColumna,
-        FechaMovimiento=FechaMovimiento,
-        Partida=Partida,
-        Jugador=Jugador
+        partidaId = partidaId,
+        jugador = jugador,
+        posicionFila = posicionFila,
+        posicionColumna = posicionColumna
     )
 
     fun JugadorDto.toDomain()= JugadorApi(
-        jugadorId = jugadorId,
         nombres = nombres,
-        email = email,
-        fechaCreacion = fechaCreacion,
-        victorias = victorias,
-        derrotas = derrotas,
-        empates = empates,
-        partidasComoJugador1 = partidasComoJugador1?.map { it.toDomain() },
-        partidasComoJugador2 = partidasComoJugador2?.map { it.toDomain() },
-        partidasGanadas = partidasGanadas?.map { it.toDomain() },
-        movimientos = movimientos?.map { it.toDomain() }
+        email = email
     )
 
     fun JugadorApi.toDto()= JugadorDto(
-      jugadorId = jugadorId,
         nombres = nombres,
-        email = email,
-        fechaCreacion = fechaCreacion,
-        victorias = victorias,
-        derrotas = derrotas,
-        empates = empates,
-         partidasComoJugador1 = partidasComoJugador1?.map { it.toDto() },
-         partidasComoJugador2 = partidasComoJugador2?.map { it.toDto() },
-         partidasGanadas = partidasGanadas?.map{ it.toDto() } ,
-         movimientos = movimientos?.map { it.toDto() }
+        email = email
     )
 
 
