@@ -29,9 +29,7 @@ class JugadorApiRepositoryImpl @Inject constructor(
         apiService.createJugador(jugador.toDto())
     }
 
-    override suspend fun updateJugador(jugador: JugadorApi) {
-        apiService.updateJugador(jugador.jugadorId, jugador.toDto())
-    }
+
 
     override fun getAllFlow(): Flow<List<JugadorApi>> = flow {
         try {
