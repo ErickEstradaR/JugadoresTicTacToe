@@ -10,7 +10,6 @@ interface JugadorApiRepository {
 
     suspend fun createJugador(jugador: JugadorApi)
 
-    suspend fun updateJugador(jugador: JugadorApi)
 
     fun getAllFlow(): Flow<List<JugadorApi>>
 
