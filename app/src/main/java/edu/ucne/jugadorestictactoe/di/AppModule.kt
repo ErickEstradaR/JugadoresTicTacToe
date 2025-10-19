@@ -10,8 +10,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import edu.ucne.jugadorestictactoe.data.Database.JugadorDb
 import edu.ucne.jugadorestictactoe.data.local.repository.JugadorRepositoryImpl
+import edu.ucne.jugadorestictactoe.data.local.repository.LogroRepositoryImpl
 import edu.ucne.jugadorestictactoe.data.local.repository.PartidaRepositoryImpl
 import edu.ucne.jugadorestictactoe.domain.repository.JugadorRepository
+import edu.ucne.jugadorestictactoe.domain.repository.LogroRepository
 import edu.ucne.jugadorestictactoe.domain.repository.PartidaRepository
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.EliminarJugadorUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.GuardarJugadorUseCase
@@ -19,6 +21,11 @@ import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.JugadorUseCas
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.ObtenerJugadorUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.ObtenerJugadoresUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.ValidarJugadorUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.LogrosUseCase.EliminarLogroUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.LogrosUseCase.GuardarLogroUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.LogrosUseCase.LogrosUseCases
+import edu.ucne.jugadorestictactoe.domain.useCase.LogrosUseCase.ObtenerLogroUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.LogrosUseCase.ObtenerLogrosUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.PartidasUseCase.EliminarPartidaUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.PartidasUseCase.GuardarPartidaUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.PartidasUseCase.ObtenerPartidaUseCase
@@ -46,6 +53,8 @@ object AppModule {
     fun providesJugadorDao(jugadorDb: JugadorDb) = jugadorDb.JugadorDao()
     @Provides
     fun providesPartidaDao(jugadorDb: JugadorDb)= jugadorDb.PartidaDao()
+    @Provides
+    fun providesLogroDao(jugadorDb: JugadorDb)= jugadorDb.LogroDao()
 
     @Provides
     fun provideJugadorUseCases(repository: JugadorRepository): JugadorUseCases {
@@ -66,8 +75,17 @@ object AppModule {
             eliminarPartida = EliminarPartidaUseCase(repository),
             obtenerPartida = ObtenerPartidaUseCase(repository),
             obtenerPartidas = ObtenerPartidasUseCase(repository),
-
         )}
+
+    @Provides
+    fun provideLogroUseCases(repository: LogroRepository): LogrosUseCases{
+        return LogrosUseCases(
+            guardarLogro = GuardarLogroUseCase(repository),
+            obtenerLogros = ObtenerLogrosUseCase(repository),
+            eliminarLogro = EliminarLogroUseCase(repository),
+            obtenerLogro = ObtenerLogroUseCase(repository)
+        )
+    }
 
     @Module
     @InstallIn(SingletonComponent::class)
@@ -85,6 +103,12 @@ object AppModule {
         abstract fun bindPartidaRepository(
             impl: PartidaRepositoryImpl
         ): PartidaRepository
+
+        @Binds
+        @Singleton
+        abstract fun bindLogroRepository(
+            impl: LogroRepositoryImpl
+        ): LogroRepository
     }
 }
 

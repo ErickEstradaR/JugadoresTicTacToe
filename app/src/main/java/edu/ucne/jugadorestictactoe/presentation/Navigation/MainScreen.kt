@@ -5,6 +5,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -52,6 +53,26 @@ fun MainScreen(navController: NavHostController) {
                         navController.navigate(Screen.PartidaList)
                               },
                     icon = { Icon(Icons.Default.PlayArrow, contentDescription = "Partidas") }
+                )
+
+                NavigationDrawerItem(
+                    label = { Text("Jugar") },
+                    selected = currentRoute == Screen.PartidaList::class.qualifiedName,
+                    onClick = {
+                        scope.launch { drawerState.close() }
+                        navController.navigate(Screen.GameScreen)
+                    },
+                    icon = { Icon(Icons.Default.PlayArrow, contentDescription = "Jugar") }
+                )
+
+                NavigationDrawerItem(
+                    label = { Text("Logros") },
+                    selected = currentRoute == Screen.LogroList::class.qualifiedName,
+                    onClick = {
+                        scope.launch { drawerState.close() }
+                        navController.navigate(Screen.LogroList)
+                    },
+                    icon = { Icon(Icons.Default.Star, contentDescription = "Logros") }
                 )
             }
         }

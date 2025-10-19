@@ -1,13 +1,13 @@
-package edu.ucne.jugadorestictactoe.presentation.Partida
+package edu.ucne.jugadorestictactoe.presentation.Logro
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -16,27 +16,27 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 
 @Composable
-fun PartidaScreen(
-    partidaId: Int?,
-    viewModel: PartidaViewModel = hiltViewModel(),
+fun LogroScreen(
+    logroId: Int?,
+    viewModel: LogroViewModel = hiltViewModel(),
     goback: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        partidaId?.takeIf { it > 0 }?.let {
-            viewModel.findPartida(it)
+        logroId?.takeIf { it > 0 }?.let {
+            viewModel.findLogro(it)
         }
     }
 
-    PartidaBodyScreen(
+    LogroBodyScreen(
         uiState = uiState,
         onAction = viewModel::onEvent,
         goback = goback,
-        savePartida = {
+        saveLogro = {
             scope.launch {
-                if (viewModel.savePartida()) goback()
+                if (viewModel.saveLogro()) goback()
             }
         }
     )
@@ -44,11 +44,11 @@ fun PartidaScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PartidaBodyScreen(
-    uiState: PartidaUiState,
-    onAction: (PartidaEvent) -> Unit,
+fun LogroBodyScreen(
+    uiState: LogroUiState,
+    onAction: (LogroEvent) -> Unit,
     goback: () -> Unit,
-    savePartida: suspend () -> Unit
+    saveLogro: suspend () -> Unit
 ) {
     val scope = rememberCoroutineScope()
 
@@ -57,10 +57,10 @@ fun PartidaBodyScreen(
             TopAppBar(
                 title = {
                     Text(
-                        if (uiState.id != null && uiState.id != 0)
-                            "Editar Partida"
+                        if (uiState.logroId != null && uiState.logroId != 0)
+                            "Editar Logro"
                         else
-                            "Nueva Partida"
+                            "Nuevo Logro"
                     )
                 },
                 navigationIcon = {
@@ -78,55 +78,33 @@ fun PartidaBodyScreen(
                 .padding(16.dp)
         ) {
             OutlinedTextField(
-                value = uiState.jugador1.toString(),
-                onValueChange = {
-                    val id = it.toIntOrNull() ?: 0
-                    onAction(PartidaEvent.jugador1Change(id))
-                },
-                label = { Text("Id Jugador 1") },
+                value = uiState.logroId?.toString() ?: "0",
+                onValueChange = {},
+                label = { Text("Id:") },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = false
+            )
+            Spacer(Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = uiState.nombre,
+                onValueChange = { onAction(LogroEvent.nombreChange(it)) },
+                label = { Text("Nombre:") },
                 modifier = Modifier.fillMaxWidth(),
                 isError = !uiState.errorMessage.isNullOrEmpty()
             )
             Spacer(Modifier.height(16.dp))
 
             OutlinedTextField(
-                value = uiState.jugador2.toString(),
-                onValueChange = {
-                    val id = it.toIntOrNull() ?: 0
-                    onAction(PartidaEvent.jugador2Change(id))
-                },
-                label = { Text("Id Jugador 2") },
+                value = uiState.descripcion,
+                onValueChange = { onAction(LogroEvent.descripcionChange(it)) },
+                label = { Text("Descripcion:") },
                 modifier = Modifier.fillMaxWidth(),
                 isError = !uiState.errorMessage.isNullOrEmpty()
             )
-            Spacer(Modifier.height(16.dp))
-
-            OutlinedTextField(
-                value = uiState.ganadorId?.toString() ?: "",
-                onValueChange = {
-                    val id = it.toIntOrNull()
-                    onAction(PartidaEvent.ganadorChange(id))
-                },
-                label = { Text("Id Ganador") },
-                modifier = Modifier.fillMaxWidth(),
-                isError = !uiState.errorMessage.isNullOrEmpty(),
-                readOnly = !uiState.esFinalizada
-            )
-            Spacer(Modifier.height(16.dp))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Checkbox(
-                    checked = uiState.esFinalizada,
-                    onCheckedChange = { onAction(PartidaEvent.esFinalizadaChange(it)) }
-                )
-                Text("Partida finalizada")
-            }
 
             uiState.errorMessage?.takeIf { it.isNotEmpty() }?.let {
-                Spacer(Modifier.height(8.dp))
-                Text(text = it, color = MaterialTheme.colorScheme.error)
+                Text(text = it, color = colors.error)
             }
 
             Spacer(Modifier.weight(1f))
@@ -135,7 +113,7 @@ fun PartidaBodyScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                OutlinedButton(onClick = { onAction(PartidaEvent.new) }) {
+                OutlinedButton(onClick = { onAction(LogroEvent.new) }) {
                     Text("Limpiar")
                     Spacer(modifier = Modifier.width(8.dp))
                     Icon(Icons.Default.Refresh, "Limpiar")
@@ -143,7 +121,7 @@ fun PartidaBodyScreen(
 
                 Spacer(modifier = Modifier.width(16.dp))
 
-                OutlinedButton(onClick = { scope.launch { savePartida() } }) {
+                OutlinedButton(onClick = { scope.launch { saveLogro() } }) {
                     Text("Guardar")
                     Spacer(modifier = Modifier.width(8.dp))
                     Icon(Icons.Default.Edit, "Guardar")
@@ -152,22 +130,18 @@ fun PartidaBodyScreen(
         }
     }
 }
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun PartidaBodyScreenPreview() {
-    PartidaBodyScreen(
-        uiState = PartidaUiState(
-            id = 1,
-            fecha = "2025-09-14",
-            jugador1 = 101,
-            jugador2 = 102,
-            ganadorId = 101,
-            esFinalizada = true,
-            errorMessage = ""
+fun PreviewLogroBodyScreen() {
+    LogroBodyScreen(
+        uiState = LogroUiState(
+            logroId = 1,
+            nombre = "Primer Logro",
+            descripcion = "Descripción de prueba para el logro",
+            errorMessage = null
         ),
         onAction = {},
         goback = {},
-        savePartida = {}
+        saveLogro = { }
     )
 }
-

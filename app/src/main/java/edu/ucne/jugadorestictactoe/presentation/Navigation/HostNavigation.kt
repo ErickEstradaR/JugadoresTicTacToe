@@ -8,9 +8,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import edu.ucne.jugadorestictactoe.presentation.Jugador.JugadorListScreen
 import edu.ucne.jugadorestictactoe.presentation.Jugador.JugadorScreen
+import edu.ucne.jugadorestictactoe.presentation.Logro.LogroScreen
+import edu.ucne.jugadorestictactoe.presentation.Logro.LogrolistScreen
 import edu.ucne.jugadorestictactoe.presentation.Partida.PartidaListScreen
 import edu.ucne.jugadorestictactoe.presentation.Partida.PartidaScreen
-
+import edu.ucne.jugadorestictactoe.presentation.tictactoe.TicTacToeScreen
 
 @Composable
 fun HostNavigation(
@@ -50,7 +52,25 @@ fun HostNavigation(
                 jugadorId = jugadorId ?: 0,
                 goback = {navHostController.popBackStack()}
             )
+        }
 
+        composable<Screen.Logro> { backStack ->
+            val logroId = backStack.toRoute<Screen.Logro>().id
+            LogroScreen(
+                logroId = logroId ?: 0,
+                goback = {navHostController.popBackStack()}
+            )
+        }
+
+        composable<Screen.LogroList> {
+            LogrolistScreen(
+                goToLogro = {id ->
+                    navHostController.navigate(Screen.Logro(id))
+                },
+                createLogro = {
+                    navHostController.navigate(Screen.Logro(null))
+                }
+            )
         }
 
         composable<Screen.Partida> { backStack ->
@@ -58,6 +78,11 @@ fun HostNavigation(
             PartidaScreen(
                 partidaId = partidaId ?: 0 ,
                 goback = {navHostController.popBackStack()}
+            )
+        }
+
+        composable<Screen.GameScreen> {
+            TicTacToeScreen(
             )
         }
     }
