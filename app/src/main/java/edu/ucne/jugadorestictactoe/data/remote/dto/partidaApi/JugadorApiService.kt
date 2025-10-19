@@ -17,6 +17,4 @@ interface JugadorApiService {
     @POST("api/Jugadores")
     suspend fun createJugador(@Body jugador: JugadorDto): JugadorDto
 
-    @PUT("api/Jugadores/{id}")
-    suspend fun updateJugador(@Path("id") id: Int?, @Body jugador: JugadorDto)
 }
