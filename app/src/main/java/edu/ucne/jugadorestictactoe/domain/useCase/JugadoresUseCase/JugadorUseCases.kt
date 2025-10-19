@@ -1,4 +1,4 @@
-package edu.ucne.jugadorestictactoe.domain.useCase
+package edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase
 
 data class JugadorUseCases(
     val validarJugador: ValidarJugadorUseCase,
