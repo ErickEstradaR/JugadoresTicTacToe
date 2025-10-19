@@ -56,13 +56,13 @@ fun MainScreen(navController: NavHostController) {
                 )
 
                 NavigationDrawerItem(
-                    label = { Text("Jugar") },
+                    label = { Text("Tecnico") },
                     selected = currentRoute == Screen.PartidaList::class.qualifiedName,
                     onClick = {
                         scope.launch { drawerState.close() }
-                        navController.navigate(Screen.GameScreen)
+                        navController.navigate(Screen.TecnicoList)
                     },
-                    icon = { Icon(Icons.Default.PlayArrow, contentDescription = "Jugar") }
+                    icon = { Icon(Icons.Default.PlayArrow, contentDescription = "Tecnico") }
                 )
 
                 NavigationDrawerItem(

@@ -12,12 +12,14 @@ import edu.ucne.jugadorestictactoe.presentation.Logro.LogroScreen
 import edu.ucne.jugadorestictactoe.presentation.Logro.LogrolistScreen
 import edu.ucne.jugadorestictactoe.presentation.Partida.PartidaListScreen
 import edu.ucne.jugadorestictactoe.presentation.Partida.PartidaScreen
+import edu.ucne.jugadorestictactoe.presentation.Tecnico.TecnicoListScreen
+import edu.ucne.jugadorestictactoe.presentation.Tecnico.TecnicoScreen
 import edu.ucne.jugadorestictactoe.presentation.tictactoe.TicTacToeScreen
 
 @Composable
 fun HostNavigation(
     navHostController: NavHostController,
-    modifier : Modifier
+    modifier: Modifier
     ) {
     NavHost(
         navController = navHostController,
@@ -73,10 +75,29 @@ fun HostNavigation(
             )
         }
 
+        composable<Screen.TecnicoList> {
+            TecnicoListScreen (
+                goToTecnico = {id ->
+                    navHostController.navigate(Screen.Tecnico(id))
+                },
+                createTecnico = {
+                    navHostController.navigate(Screen.Tecnico(null))
+                }
+            )
+        }
+
         composable<Screen.Partida> { backStack ->
             val partidaId = backStack.toRoute<Screen.Partida>().Id
             PartidaScreen(
                 partidaId = partidaId ?: 0 ,
+                goback = {navHostController.popBackStack()}
+            )
+        }
+
+        composable<Screen.Tecnico> { backStack ->
+            val tecnicoId = backStack.toRoute<Screen.Tecnico>().id
+            TecnicoScreen (
+                tecnicoId = tecnicoId ?: 0 ,
                 goback = {navHostController.popBackStack()}
             )
         }

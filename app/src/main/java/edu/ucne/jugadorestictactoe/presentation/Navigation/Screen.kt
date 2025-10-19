@@ -8,6 +8,8 @@ sealed class Screen{
     data class Partida(val Id: Int?): Screen()
     @Serializable
     data class Logro(val id: Int?): Screen()
+    @Serializable
+    data class Tecnico(val id: Int?): Screen()
 
     @Serializable
     data object List: Screen()
@@ -15,6 +17,8 @@ sealed class Screen{
     data object PartidaList: Screen()
     @Serializable
     data object LogroList: Screen()
+    @Serializable
+    data object TecnicoList: Screen()
 
     @Serializable
     data object GameScreen : Screen()
