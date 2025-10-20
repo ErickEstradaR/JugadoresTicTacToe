@@ -30,7 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import edu.ucne.jugadorestictactoe.data.remote.Resource
@@ -88,7 +87,6 @@ fun JugadorApiListScreen(
                         JugadoresList(
                             jugadores = jugadores,
                             paddingValues = paddingValues,
-                            goToJugador = goToJugador
                         )
                     }
                 }
@@ -102,7 +100,6 @@ fun JugadorApiListScreen(
 private fun JugadoresList(
     jugadores: List<JugadorApi>,
     paddingValues: PaddingValues,
-    goToJugador: (Int) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -112,38 +109,31 @@ private fun JugadoresList(
         items(jugadores) { jugador ->
             JugadorCardItem(
                 jugador = jugador,
-                goToJugador = {
-                    jugador.jugadorId?.let { id ->
-                        goToJugador(id)
-                    }
-                },
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
 
-// 4. Componentes adicionales (Debes implementarlos)
+
 @Composable
 fun LoadingIndicator(modifier: Modifier = Modifier) {
-    // Implementa un CircularProgressIndicator centrado
 }
 
 @Composable
 fun ErrorContent(message: String, onRetry: () -> Unit, modifier: Modifier = Modifier) {
-    // Implementa un mensaje de error y un botón de reintento
+
 }
 
 @Composable
 fun EmptyContent(modifier: Modifier = Modifier) {
-    // Implementa un mensaje de "No hay jugadores"
+
 }
 
 
 @Composable
 fun JugadorCardItem(
     jugador: JugadorApi,
-    goToJugador: () -> Unit,
 ) {
     Card(
         modifier = Modifier
@@ -158,14 +148,10 @@ fun JugadorCardItem(
                 .fillMaxWidth()
         ) {
             Column(modifier = Modifier.weight(1f).padding(start = 8.dp)) {
-                Text(text = "Id: ${jugador.jugadorId}", fontWeight  = FontWeight.Bold)
                 Text(text = "Nombre: ${jugador.nombres}", fontWeight  = FontWeight.Bold)
                 Text(text = "Email: ${jugador.email}", fontWeight  = FontWeight.Bold)
             }
             Spacer(modifier = Modifier.width(8.dp))
-            IconButton(onClick = goToJugador) {
-                Icon(Icons.Default.Edit, contentDescription = "Ver")
-            }
 
             }
         }
