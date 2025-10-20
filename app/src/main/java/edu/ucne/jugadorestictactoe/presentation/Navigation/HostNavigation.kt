@@ -16,7 +16,6 @@ import edu.ucne.jugadorestictactoe.presentation.Partida.PartidaScreen
 import edu.ucne.jugadorestictactoe.presentation.Tecnico.TecnicoListScreen
 import edu.ucne.jugadorestictactoe.presentation.Tecnico.TecnicoScreen
 import edu.ucne.jugadorestictactoe.presentation.tictactoe.GameViewModel
-import edu.ucne.jugadorestictactoe.presentation.tictactoe.PlayerSelectionScreen
 import edu.ucne.jugadorestictactoe.presentation.tictactoe.TicTacToeScreen
 import edu.ucne.jugadorestictactoe.presentation.tictactoe.jugador.JugadorApiListScreen
 import edu.ucne.jugadorestictactoe.presentation.tictactoe.jugador.JugadorApiScreen
@@ -61,15 +60,14 @@ fun HostNavigation(
             )
         }
 
-        composable<Screen.GameScreen> { backStack ->
+        composable<Screen.GameScreen> {
             val viewModel: GameViewModel = hiltViewModel()
             val state by viewModel.state.collectAsStateWithLifecycle()
 
-            PlayerSelectionScreen(
-                jugadorX = state.selectedJugador,
-                onJugadorXSelected = viewModel::setJugadorX,
-
-                onStartGame = viewModel::startGame
+            TicTacToeScreen(
+                state = state,
+                onCellClick = viewModel::onCellClick,
+                restartGame = viewModel::restartGame,
             )
         }
 
@@ -116,11 +114,6 @@ fun HostNavigation(
             TecnicoScreen (
                 tecnicoId = tecnicoId ?: 0 ,
                 goback = {navHostController.popBackStack()}
-            )
-        }
-
-        composable<Screen.GameScreen> {
-            TicTacToeScreen(
             )
         }
     }
