@@ -67,7 +67,6 @@ class JugadorViewModel @Inject constructor(
                     val jugador = useCases.obtenerJugador(jugadorId)
                     _uiState.update {
                         it.copy(
-                            JugadorId = jugador?.jugadorId,
                             Nombres = jugador?.nombres.orEmpty(),
                             Email = jugador?.email.orEmpty(),
                         )
@@ -82,17 +81,8 @@ class JugadorViewModel @Inject constructor(
     suspend fun saveJugador(): Boolean {
         val currentState = _uiState.value
         val jugador = JugadorApi(
-        jugadorId = currentState.JugadorId ?: 0,
         nombres = currentState.Nombres,
         email = currentState.Email,
-        fechaCreacion = currentState.FechaCreacion,
-        victorias = currentState.Victorias,
-        derrotas = currentState.Derrotas,
-        empates = currentState.Empates,
-        partidasComoJugador1 = currentState.PartidasComoJugador1,
-        partidasComoJugador2 = currentState.PartidasComoJugador2,
-        partidasGanadas = currentState.PartidasGanadas,
-        movimientos = currentState.Movimientos
         )
 
         return try {
