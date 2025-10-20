@@ -12,17 +12,27 @@ import edu.ucne.jugadorestictactoe.data.Database.JugadorDb
 import edu.ucne.jugadorestictactoe.data.local.repository.JugadorApiRepositoryImpl
 import edu.ucne.jugadorestictactoe.data.local.repository.JugadorRepositoryImpl
 import edu.ucne.jugadorestictactoe.data.local.repository.LogroRepositoryImpl
+import edu.ucne.jugadorestictactoe.data.local.repository.MovimientoApiRepositoryImpl
+import edu.ucne.jugadorestictactoe.data.local.repository.PartidaApiRepositoryImpl
 import edu.ucne.jugadorestictactoe.data.local.repository.PartidaRepositoryImpl
 import edu.ucne.jugadorestictactoe.data.local.repository.TecnicoRepositoryImpl
 import edu.ucne.jugadorestictactoe.domain.repository.JugadorApiRepository
 import edu.ucne.jugadorestictactoe.domain.repository.JugadorRepository
 import edu.ucne.jugadorestictactoe.domain.repository.LogroRepository
+import edu.ucne.jugadorestictactoe.domain.repository.MovimientoRepository
+import edu.ucne.jugadorestictactoe.domain.repository.PartidaApiRepository
 import edu.ucne.jugadorestictactoe.domain.repository.PartidaRepository
 import edu.ucne.jugadorestictactoe.domain.repository.TecnicoRepository
 import edu.ucne.jugadorestictactoe.domain.useCase.GameUseCases.JugadorApiUseCases.GuardarJugadorApiUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.GameUseCases.JugadorApiUseCases.JugadoresUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.GameUseCases.JugadorApiUseCases.ObtenerJugadorApiUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.GameUseCases.JugadorApiUseCases.ObtenerJugadoresApiUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.GameUseCases.MovimientoUseCases.MovimientoUseCases
+import edu.ucne.jugadorestictactoe.domain.useCase.GameUseCases.MovimientoUseCases.ObtenerMovimientosDePartidaUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.GameUseCases.MovimientoUseCases.RegistrarMovimientoUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.GameUseCases.PartidaUseCases.CrearPartidaUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.GameUseCases.PartidaUseCases.ObtenerPartidaApiUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.GameUseCases.PartidaUseCases.PartidaApiUseCases
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.EliminarJugadorUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.GuardarJugadorUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.JugadorUseCases
@@ -119,6 +129,20 @@ object AppModule {
         )
     }
 
+    @Provides
+    fun providePartidaApiUseCases(repository: PartidaApiRepository): PartidaApiUseCases {
+        return PartidaApiUseCases(
+            obtenerPartidaApi = ObtenerPartidaApiUseCase(repository),
+            crearPartidaApi = CrearPartidaUseCase(repository),
+        )
+    }
+    @Provides
+    fun provideMovimientoUseCases(repository: MovimientoRepository): MovimientoUseCases {
+        return MovimientoUseCases(
+            crearMovimiento = RegistrarMovimientoUseCase(repository),
+            obtenerMovimientosDePartida = ObtenerMovimientosDePartidaUseCase(repository)
+        )
+    }
 
     @Module
     @InstallIn(SingletonComponent::class)
@@ -151,9 +175,21 @@ object AppModule {
 
         @Binds
         @Singleton
+        abstract fun bindPartidaApiRepository(
+            impl: PartidaApiRepositoryImpl
+        ): PartidaApiRepository
+
+        @Binds
+        @Singleton
         abstract fun bindLogroRepository(
             impl: LogroRepositoryImpl
         ): LogroRepository
+
+        @Binds
+        @Singleton
+        abstract fun bindMovimientoRepository(
+            impl: MovimientoApiRepositoryImpl
+        ): MovimientoRepository
     }
 }
 
