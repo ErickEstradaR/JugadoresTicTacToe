@@ -57,38 +57,14 @@ fun JugadorEntity.toDomain() = Jugador(
     )
 
     fun PartidaDto.toDomain() = PartidaApi(
-        PartidaId = PartidaId,
-        Jugador1Id = Jugador1Id,
-        Jugador2Id = Jugador2Id,
-        EstadoPartida = EstadoPartida,
-        GanadorId = GanadorId,
-        TurnoJugadorId = TurnoJugadorId,
-        EstadoTablero = EstadoTablero,
-        FechaInicio = FechaInicio,
-        FechaFin = FechaFin,
-        Movimientos = Movimientos?.map { it.toDomain() },
-        Jugador1 = Jugador1,
-        TurnoJugador = TurnoJugador,
-        Jugador2 = Jugador2,
-        Ganador = Ganador
+        jugador1Id = jugador1Id,
+        jugador2Id = jugador2Id
     )
 
 
     fun PartidaApi.toDto() = PartidaDto(
-        PartidaId = PartidaId,
-        Jugador1Id = Jugador1Id,
-        Jugador2Id = Jugador2Id,
-        EstadoPartida = EstadoPartida,
-        GanadorId = GanadorId,
-        TurnoJugadorId = TurnoJugadorId,
-        EstadoTablero = EstadoTablero,
-        FechaInicio = FechaInicio,
-        FechaFin = FechaFin,
-        Movimientos = Movimientos?.map { it.toDto() },
-        Jugador1 = Jugador1,
-        TurnoJugador = TurnoJugador,
-        Jugador2 = Jugador2,
-        Ganador = Ganador
+        jugador1Id = jugador1Id,
+        jugador2Id = jugador2Id,
         )
 
     fun Movimiento.toDto() = MovimientoDto(
