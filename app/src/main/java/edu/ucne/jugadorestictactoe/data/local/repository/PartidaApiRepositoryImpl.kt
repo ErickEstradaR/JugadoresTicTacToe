@@ -1,7 +1,7 @@
 package edu.ucne.jugadorestictactoe.data.local.repository
 
 import edu.ucne.jugadorestictactoe.data.local.mappers.toDomain
-import edu.ucne.jugadorestictactoe.data.remote.dto.partida.PartidaDto
+import edu.ucne.jugadorestictactoe.data.local.mappers.toDto
 import edu.ucne.jugadorestictactoe.data.remote.dto.partidaApi.PartidaApiService
 import edu.ucne.jugadorestictactoe.domain.model.PartidaApi
 import edu.ucne.jugadorestictactoe.domain.repository.PartidaApiRepository
@@ -19,25 +19,8 @@ class PartidaApiRepositoryImpl @Inject constructor(
             return api.getPartida(partidaId).toDomain()
         }
 
-        override suspend fun createPartida(player1Id: Int): PartidaApi {
-            val newPartidaDto = PartidaDto(
-                PartidaId = 0,
-                Jugador1Id = player1Id,
-                Jugador2Id = null,
-                EstadoPartida = "PENDIENTE",
-                GanadorId = null,
-                TurnoJugadorId = player1Id,
-                EstadoTablero = ".........",
-                FechaInicio = null,
-                FechaFin = null,
-
-                Jugador1 = null,
-                Jugador2 = null,
-                Ganador = null,
-                TurnoJugador = null,
-
-                Movimientos = emptyList()
-            )
-            return api.createPartida(newPartidaDto).toDomain()
-        }
+    override suspend fun createPartida(partidaApi: PartidaApi): PartidaApi {
+        val responseDto = api.createPartida(partidaApi.toDto())
+        return responseDto.toDomain()
+    }
     }
