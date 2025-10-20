@@ -94,14 +94,6 @@ fun JugadorBodyScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            OutlinedTextField(
-                value = uiState.JugadorId?.toString() ?: "0",
-                onValueChange = {},
-                label = { Text("Id:") },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = false
-            )
-            Spacer(Modifier.height(16.dp))
 
             OutlinedTextField(
                 value = uiState.Nombres,
