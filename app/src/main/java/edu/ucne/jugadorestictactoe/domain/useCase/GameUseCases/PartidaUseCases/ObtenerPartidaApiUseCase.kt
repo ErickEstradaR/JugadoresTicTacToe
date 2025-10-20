@@ -4,11 +4,11 @@ import edu.ucne.jugadorestictactoe.domain.model.PartidaApi
 import edu.ucne.jugadorestictactoe.domain.repository.PartidaApiRepository
 import javax.inject.Inject
 
-class ObtenerPartidaUseCase @Inject constructor(
-    private val partidaApiRepository: PartidaApiRepository // Inyecta la interfaz del Repositorio
+class ObtenerPartidaApiUseCase @Inject constructor(
+    private val partidaApiRepository: PartidaApiRepository
 ) {
 
-    suspend operator fun invoke(partidaId: Int): PartidaApi { // Debe retornar el modelo de Dominio (Partida)
+    suspend operator fun invoke(partidaId: Int): PartidaApi {
 
         if (partidaId <= 0) {
             throw IllegalArgumentException("El ID de la partida debe ser positivo.")
