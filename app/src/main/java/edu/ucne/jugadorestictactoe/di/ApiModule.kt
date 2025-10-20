@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import edu.ucne.jugadorestictactoe.data.remote.dto.Tecnico.TecnicosApiService
 import edu.ucne.jugadorestictactoe.data.remote.dto.partidaApi.JugadorApiService
+import edu.ucne.jugadorestictactoe.data.remote.dto.partidaApi.MovimientoApiService
 import edu.ucne.jugadorestictactoe.data.remote.dto.partidaApi.PartidaApiService
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -17,7 +18,7 @@ import kotlin.jvm.java
 @InstallIn(SingletonComponent::class)
 @Module
 object ApiModule {
-    const val BASE_URL = "https://tictactoeapiap2.azurewebsites.net/"
+    const val BASE_URL = "https://gestionhuacalesapi.azurewebsites.net/"
 
     @Provides
     @Singleton
@@ -44,6 +45,16 @@ object ApiModule {
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
             .create(JugadorApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMovimientoApiService(moshi: Moshi): MovimientoApiService {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+            .create(MovimientoApiService::class.java)
     }
 
     @Provides
