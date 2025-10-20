@@ -5,17 +5,10 @@ import edu.ucne.jugadorestictactoe.domain.repository.PartidaApiRepository
 import javax.inject.Inject
 
 class CrearPartidaUseCase @Inject constructor(
-    private val partidaApiRepository: PartidaApiRepository
-) {
+    private val repository: PartidaApiRepository
+){
 
-    suspend operator fun invoke(jugador1Id: Int): PartidaApi {
-
-        if (jugador1Id <= 0) {
-            throw IllegalArgumentException("El ID del jugador debe ser positivo.")
-        }
-
-        val partidaApi = partidaApiRepository.createPartida(jugador1Id)
-
-        return partidaApi
+    suspend operator fun invoke(partida: PartidaApi): PartidaApi {
+        return repository.createPartida(partida)
     }
 }
