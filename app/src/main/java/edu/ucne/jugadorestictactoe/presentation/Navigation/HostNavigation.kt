@@ -1,20 +1,24 @@
 package edu.ucne.jugadorestictactoe.presentation.Navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import edu.ucne.jugadorestictactoe.presentation.Jugador.JugadorListScreen
-import edu.ucne.jugadorestictactoe.presentation.Jugador.JugadorScreen
 import edu.ucne.jugadorestictactoe.presentation.Logro.LogroScreen
 import edu.ucne.jugadorestictactoe.presentation.Logro.LogrolistScreen
 import edu.ucne.jugadorestictactoe.presentation.Partida.PartidaListScreen
 import edu.ucne.jugadorestictactoe.presentation.Partida.PartidaScreen
 import edu.ucne.jugadorestictactoe.presentation.Tecnico.TecnicoListScreen
 import edu.ucne.jugadorestictactoe.presentation.Tecnico.TecnicoScreen
+import edu.ucne.jugadorestictactoe.presentation.tictactoe.GameViewModel
 import edu.ucne.jugadorestictactoe.presentation.tictactoe.TicTacToeScreen
+import edu.ucne.jugadorestictactoe.presentation.tictactoe.jugador.JugadorApiListScreen
+import edu.ucne.jugadorestictactoe.presentation.tictactoe.jugador.JugadorApiScreen
 
 @Composable
 fun HostNavigation(
@@ -23,16 +27,16 @@ fun HostNavigation(
     ) {
     NavHost(
         navController = navHostController,
-        startDestination = Screen.List,
+        startDestination = Screen.JugadorApiList,
         modifier = modifier
     ) {
-        composable<Screen.List> {
-            JugadorListScreen(
-                goToJugadores = { id ->
-                    navHostController.navigate(Screen.Jugador(id))
+        composable<Screen.JugadorApiList> {
+            JugadorApiListScreen (
+                goToJugador = { id ->
+                    navHostController.navigate(Screen.JugadorApi(id))
                 },
                 createJugador = {
-                    navHostController.navigate(Screen.Jugador(null))
+                    navHostController.navigate(Screen.JugadorApi(null))
                 }
             )
         }
@@ -48,11 +52,22 @@ fun HostNavigation(
             )
         }
 
-        composable<Screen.Jugador> { backStack ->
-            val jugadorId = backStack.toRoute<Screen.Jugador>().Id
-            JugadorScreen(
+        composable<Screen.JugadorApi> { backStack ->
+            val jugadorId = backStack.toRoute<Screen.JugadorApi>().id
+            JugadorApiScreen(
                 jugadorId = jugadorId ?: 0,
                 goback = {navHostController.popBackStack()}
+            )
+        }
+
+        composable<Screen.GameScreen> {
+            val viewModel: GameViewModel = hiltViewModel()
+            val state by viewModel.state.collectAsStateWithLifecycle()
+
+            TicTacToeScreen(
+                state = state,
+                onCellClick = viewModel::onCellClick,
+                restartGame = viewModel::restartGame,
             )
         }
 
@@ -99,11 +114,6 @@ fun HostNavigation(
             TecnicoScreen (
                 tecnicoId = tecnicoId ?: 0 ,
                 goback = {navHostController.popBackStack()}
-            )
-        }
-
-        composable<Screen.GameScreen> {
-            TicTacToeScreen(
             )
         }
     }

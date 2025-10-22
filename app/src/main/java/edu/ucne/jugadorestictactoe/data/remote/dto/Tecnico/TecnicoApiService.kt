@@ -1,4 +1,4 @@
-package edu.ucne.jugadorestictactoe.data.remote.dto
+package edu.ucne.jugadorestictactoe.data.remote.dto.Tecnico
 
 import retrofit2.http.Body
 import retrofit2.http.DELETE

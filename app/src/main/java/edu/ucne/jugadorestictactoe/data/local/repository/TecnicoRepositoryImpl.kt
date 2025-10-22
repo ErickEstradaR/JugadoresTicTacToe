@@ -1,7 +1,7 @@
 package edu.ucne.jugadorestictactoe.data.local.repository
 
-import edu.ucne.jugadorestictactoe.data.remote.dto.TecnicoApi
-import edu.ucne.jugadorestictactoe.data.remote.dto.TecnicosApiService
+import edu.ucne.jugadorestictactoe.data.remote.dto.Tecnico.TecnicoApi
+import edu.ucne.jugadorestictactoe.data.remote.dto.Tecnico.TecnicosApiService
 import edu.ucne.jugadorestictactoe.domain.model.Tecnico
 import edu.ucne.jugadorestictactoe.domain.repository.TecnicoRepository
 import kotlinx.coroutines.flow.Flow
@@ -43,12 +43,11 @@ class TecnicoRepositoryImpl @Inject constructor(
             val tecnicosApi = api.getTecnicos()
             emit(tecnicosApi.map { it.toDomain() })
         } catch (e: Exception) {
-            emit(emptyList()) // o manejar error
+            emit(emptyList())
         }
     }
 
 
-    // 🔹 Mappers entre DTO (Data) y Model (Domain)
     private fun TecnicoApi.toDomain() = Tecnico(
         tecnicoId = this.tecnicoId,
         nombres = this.nombres,
