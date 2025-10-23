@@ -53,7 +53,8 @@ dependencies {
     implementation(libs.androidx.activity.ktx)
     annotationProcessor(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
-
+    implementation("androidx.hilt:hilt-work:1.0.0")
+    ksp("androidx.hilt:hilt-compiler:1.0.0")
 
     implementation(libs.androidx.foundation)
 
