@@ -3,7 +3,7 @@ package edu.ucne.jugadorestictactoe.data.local.mappers
 import edu.ucne.jugadorestictactoe.data.local.jugadores.Entities.JugadorEntity
 import edu.ucne.jugadorestictactoe.data.local.logros.entity.LogroEntity
 import edu.ucne.jugadorestictactoe.data.local.partidas.Entity.PartidaEntity
-import edu.ucne.jugadorestictactoe.data.remote.dto.partida.JugadorDto
+import edu.ucne.jugadorestictactoe.data.remote.dto.jugador.JugadorResponse
 import edu.ucne.jugadorestictactoe.data.remote.dto.partida.MovimientoDto
 import edu.ucne.jugadorestictactoe.data.remote.dto.partida.PartidaDto
 import edu.ucne.jugadorestictactoe.domain.model.Jugador
@@ -17,13 +17,13 @@ import edu.ucne.jugadorestictactoe.domain.model.PartidaApi
 fun JugadorEntity.toDomain() = Jugador(
         id = jugadorId ?: 0,
         nombre = nombres,
-        partidas = partidas
+        partidas = email
     )
 
     fun Jugador.toEntity() = JugadorEntity(
         jugadorId = id,
         nombres = nombre,
-        partidas = partidas
+        email = partidas
     )
 
     fun PartidaEntity.toDomain() = Partida(
@@ -81,12 +81,12 @@ fun JugadorEntity.toDomain() = Jugador(
         posicionColumna = posicionColumna
     )
 
-    fun JugadorDto.toDomain()= JugadorApi(
+    fun JugadorResponse.toDomain()= JugadorApi(
         nombres = nombres,
         email = email
     )
 
-    fun JugadorApi.toDto()= JugadorDto(
+    fun JugadorApi.toDto()= JugadorResponse(
         nombres = nombres,
         email = email
     )
