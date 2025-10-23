@@ -25,4 +25,7 @@ interface JugadorDao{
 
     @Query("SELECT * FROM Jugadores")
     fun getAll(): Flow<List<JugadorEntity>>
+
+    @Query("SELECT * FROM Jugadores WHERE isPendingCreate = 1")
+    suspend fun getPendingCreateTasks(): List<JugadorEntity>
 }
