@@ -2,12 +2,15 @@ package edu.ucne.jugadorestictactoe.data.local.jugadores.Entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.UUID
 
 @Entity(tableName = "Jugadores")
 
 data class JugadorEntity(
     @PrimaryKey
+    val id: String = UUID.randomUUID().toString(),
     val jugadorId: Int? = null,
     val nombres: String = "",
-    val partidas: Int = 0
+    val email: Int = 0,
+    val isPendingCreate: Boolean = false
 )
