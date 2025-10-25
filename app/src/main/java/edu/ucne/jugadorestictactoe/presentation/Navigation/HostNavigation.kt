@@ -17,8 +17,8 @@ import edu.ucne.jugadorestictactoe.presentation.Tecnico.TecnicoListScreen
 import edu.ucne.jugadorestictactoe.presentation.Tecnico.TecnicoScreen
 import edu.ucne.jugadorestictactoe.presentation.tictactoe.GameViewModel
 import edu.ucne.jugadorestictactoe.presentation.tictactoe.TicTacToeScreen
-import edu.ucne.jugadorestictactoe.presentation.tictactoe.jugador.JugadorApiListScreen
-import edu.ucne.jugadorestictactoe.presentation.tictactoe.jugador.JugadorApiScreen
+import edu.ucne.jugadorestictactoe.presentation.tictactoe.jugador.JugadorListScreen
+
 
 @Composable
 fun HostNavigation(
@@ -27,17 +27,13 @@ fun HostNavigation(
     ) {
     NavHost(
         navController = navHostController,
-        startDestination = Screen.JugadorApiList,
+        startDestination = Screen.List,
         modifier = modifier
     ) {
-        composable<Screen.JugadorApiList> {
-            JugadorApiListScreen (
-                goToJugador = { id ->
-                    navHostController.navigate(Screen.JugadorApi(id))
-                },
-                createJugador = {
-                    navHostController.navigate(Screen.JugadorApi(null))
-                }
+
+        composable<Screen.List> {
+            JugadorListScreen(
+
             )
         }
 
@@ -52,13 +48,7 @@ fun HostNavigation(
             )
         }
 
-        composable<Screen.JugadorApi> { backStack ->
-            val jugadorId = backStack.toRoute<Screen.JugadorApi>().id
-            JugadorApiScreen(
-                jugadorId = jugadorId ?: 0,
-                goback = {navHostController.popBackStack()}
-            )
-        }
+
 
         composable<Screen.GameScreen> {
             val viewModel: GameViewModel = hiltViewModel()
