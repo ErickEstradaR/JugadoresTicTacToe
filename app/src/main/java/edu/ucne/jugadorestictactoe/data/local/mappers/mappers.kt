@@ -15,16 +15,20 @@ import edu.ucne.jugadorestictactoe.domain.model.PartidaApi
 
 
 fun JugadorEntity.toDomain() = Jugador(
-        id = jugadorId ?: 0,
-        nombre = nombres,
-        partidas = email
-    )
+    id = id,
+    remoteId = remoteId,
+    nombres = nombres,
+    email = email,
+    isPendingCreate = isPendingCreate
+)
 
-    fun Jugador.toEntity() = JugadorEntity(
-        jugadorId = id,
-        nombres = nombre,
-        email = partidas
-    )
+fun Jugador.toEntity() = JugadorEntity(
+    id = id,
+    remoteId = remoteId,
+    nombres = nombres,
+    email = email,
+    isPendingCreate = isPendingCreate
+)
 
     fun PartidaEntity.toDomain() = Partida(
         id = partidaId ?: 0,
@@ -86,10 +90,6 @@ fun JugadorEntity.toDomain() = Jugador(
         email = email
     )
 
-    fun JugadorApi.toDto()= JugadorResponse(
-        nombres = nombres,
-        email = email
-    )
 
 
 
