@@ -19,10 +19,6 @@ sealed class Screen{
     data object LogroList: Screen()
     @Serializable
     data object TecnicoList: Screen()
-    @Serializable
-    data object JugadorApiList: Screen()
-    @Serializable
-    data class JugadorApi(val id: Int?): Screen()
 
     @Serializable
     data object GameScreen : Screen()
