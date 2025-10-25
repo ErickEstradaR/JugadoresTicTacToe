@@ -1,10 +1,13 @@
 package edu.ucne.jugadorestictactoe.presentation.tictactoe.jugador
 
-sealed interface JugadorEvent {
-    data class jugadorIdChange(val jugadorId: Int?) : JugadorEvent
-    data class nombreChange(val nombre: String) : JugadorEvent
-    data class emailChange(val email: String) : JugadorEvent
+import edu.ucne.jugadorestictactoe.domain.model.Jugador
 
-    data object save : JugadorEvent
-    data object new : JugadorEvent
+sealed interface JugadorEvent {
+    data class CrearJugador(val nombres: String) : JugadorEvent
+    data class UpdateJugador(val jugador: Jugador) : JugadorEvent
+    data class DeleteJugador(val id: String) : JugadorEvent
+    object ShowCreateSheet : JugadorEvent
+    object HideCreateSheet : JugadorEvent
+    data class OnDescriptionChange(val description: String) : JugadorEvent
+    object UserMessageShown : JugadorEvent
 }
