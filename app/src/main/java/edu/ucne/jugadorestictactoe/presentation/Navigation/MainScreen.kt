@@ -37,10 +37,10 @@ fun MainScreen(navController: NavHostController) {
 
                 NavigationDrawerItem(
                     label = { Text("Jugadores") },
-                    selected = currentRoute == Screen.JugadorApiList::class.qualifiedName,
+                    selected = currentRoute == Screen.List::class.qualifiedName,
                     onClick = {
                         scope.launch { drawerState.close() }
-                        navController.navigate(Screen.JugadorApiList)
+                        navController.navigate(Screen.List)
                     },
                     icon = { Icon(Icons.Default.Person, contentDescription = "Jugadores") }
                 )
