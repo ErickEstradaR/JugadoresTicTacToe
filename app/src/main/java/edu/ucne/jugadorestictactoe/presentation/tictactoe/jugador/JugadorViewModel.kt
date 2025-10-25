@@ -4,10 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.ucne.jugadorestictactoe.data.remote.Resource
-import edu.ucne.jugadorestictactoe.domain.model.JugadorApi
-import edu.ucne.jugadorestictactoe.domain.useCase.GameUseCases.JugadorApiUseCases.JugadoresUseCase
+import edu.ucne.jugadorestictactoe.domain.model.Jugador
+import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.CreateJugadorLocalUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.EliminarJugadorUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.GuardarJugadorUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.TriggerSyncUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -15,107 +18,58 @@ import javax.inject.Inject
 
 @HiltViewModel
 class JugadorViewModel @Inject constructor(
-    private val useCases: JugadoresUseCase
-): ViewModel() {
+    private val createJugadorLocalUseCase: CreateJugadorLocalUseCase,
+    private val upsertJugador: GuardarJugadorUseCase,
+    private val deleteTaskUseCase: EliminarJugadorUseCase,
+    private val triggerSyncUseCase: TriggerSyncUseCase
+) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(JugadorUiState.default())
-    private val DEFAULT_ERROR_MESSAGE = "Error desconocido"
-    val uiState = _uiState.asStateFlow()
+    private val _state = MutableStateFlow(JugadorUiState(isLoading = true))
+    val state: StateFlow<JugadorUiState> = _state.asStateFlow()
 
-    init {
-        getJugadores()
-    }
-
-    fun onEvent(event: JugadorEvent){
-        when(event){
-            is JugadorEvent.nombreChange -> onNombreChange(event.nombre)
-            is JugadorEvent.emailChange -> onEmailChange(event.email)
-            is JugadorEvent.jugadorIdChange -> onJugadorIdChange(event.jugadorId)
-            JugadorEvent.save -> viewModelScope.launch { saveJugador() }
-            JugadorEvent.new -> nuevo()
+    fun onEvent(event: JugadorEvent) {
+        when (event) {
+            is JugadorEvent.CrearJugador -> crearJugador(event.nombres)
+            is JugadorEvent.UpdateJugador -> updateJugador(event.jugador)
+            is JugadorEvent.DeleteJugador -> deleteJugador(event.id)
+            is JugadorEvent.ShowCreateSheet -> _state.update { it.copy(showCreateSheet = true) }
+            is JugadorEvent.HideCreateSheet -> _state.update { it.copy(showCreateSheet = false, jugadorDescription = "") }
+            is JugadorEvent.OnDescriptionChange -> _state.update { it.copy(jugadorDescription = event.description) }
+            is JugadorEvent.UserMessageShown -> clearMessage()
         }
     }
 
-    private fun nuevo() {
-        _uiState.value = JugadorUiState.default()
-    }
-
-     fun getJugadores() {
-        _uiState.update { it.copy(jugadoresResource = Resource.Loading())}
-        viewModelScope.launch {
-            try {
-                useCases.obtenerJugadores().collectLatest { lista ->
-                    _uiState.update {
-                        it.copy(jugadoresResource = Resource.Success(lista))
-                    }
-                }
-            } catch (e: Exception) {
-                _uiState.update {
-                    it.copy(
-                        actionMessage = e.message ?: DEFAULT_ERROR_MESSAGE,
-                        jugadoresResource = Resource.Error(e.message ?: DEFAULT_ERROR_MESSAGE, emptyList())
-                    )  }
+    private fun crearJugador(nombres: String) = viewModelScope.launch {
+        val jugador = Jugador(nombres = nombres , email = "string")
+        when (val result = createJugadorLocalUseCase(jugador)) {
+            is Resource.Success -> {
+                _state.update { it.copy(userMessage = "Jugador guardado localmente", showCreateSheet = false, jugadorDescription = "") }
+                triggerSyncUseCase()
             }
+            is Resource.Error -> _state.update { it.copy(userMessage = result.message) }
+            else -> {}
         }
     }
 
-
-    fun findJugador(jugadorId: Int) {
-        viewModelScope.launch {
-            if (jugadorId > 0) {
-                try {
-                    val jugador = useCases.obtenerJugador(jugadorId)
-                    _uiState.update {
-                        it.copy(
-                            Nombres = jugador?.nombres.orEmpty(),
-                            Email = jugador?.email.orEmpty(),
-                        )
-                    }
-                } catch (e: Exception) {
-                    _uiState.update { it.copy(errorMessage = e.message ?: DEFAULT_ERROR_MESSAGE) }
-                }
-            }
+    private fun updateJugador(jugador: Jugador) = viewModelScope.launch {
+        when (val result = upsertJugador(jugador)) {
+            is Resource.Success -> _state.update { it.copy(userMessage = "Jugador actualizado") }
+            is Resource.Error -> _state.update { it.copy(userMessage = result.message) }
+            else -> {}
         }
     }
 
-    suspend fun saveJugador(): Boolean {
-        val currentState = _uiState.value
-        val jugador = JugadorApi(
-        nombres = currentState.Nombres,
-        email = currentState.Email,
-        )
-
-        return try {
-            useCases.guardarJugador(jugador)
-
-            _uiState.update { it.copy(actionMessage = "Jugador guardado exitosamente.") }
-
-            getJugadores()
-
-            _uiState.update { it.copy(isSaving = false) }
-            true
-        } catch (e: Exception) {
-            _uiState.update { it.copy(
-                actionMessage = e.message ?: DEFAULT_ERROR_MESSAGE,
-                isSaving = false
-            ) }
-            false
+    private fun deleteJugador(id: String) = viewModelScope.launch {
+        when (val result = deleteTaskUseCase(id)) {
+            is Resource.Success -> _state.update { it.copy(userMessage = "Jugador eliminado") }
+            is Resource.Error -> _state.update { it.copy(userMessage = result.message) }
+            else -> {}
         }
     }
 
-    private fun onNombreChange(nombre: String){
-        _uiState.update { it.copy(Nombres = nombre) }
+    private fun clearMessage() {
+        _state.update { it.copy(userMessage = null) }
     }
 
-    private fun onEmailChange(email: String){
-        _uiState.update { it.copy(Email = email) }
-    }
 
-    private fun onJugadorIdChange(jugadorId: Int?){
-        _uiState.update { it.copy(JugadorId = jugadorId) }
-    }
-
-    fun clearError() {
-        _uiState.update { it.copy(errorMessage = null) }
-    }
 }
