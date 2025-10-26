@@ -15,7 +15,7 @@ import edu.ucne.jugadorestictactoe.domain.model.PartidaApi
 
 
 fun JugadorEntity.toDomain() = Jugador(
-    id = id,
+    jugadorId = jugadorId,
     remoteId = remoteId,
     nombres = nombres,
     email = email,
@@ -23,7 +23,7 @@ fun JugadorEntity.toDomain() = Jugador(
 )
 
 fun Jugador.toEntity() = JugadorEntity(
-    id = id,
+    jugadorId = jugadorId,
     remoteId = remoteId,
     nombres = nombres,
     email = email,
