@@ -110,12 +110,12 @@ fun JugadorListBody(
                     ) {
                         items(
                             items = state.jugadores,
-                            key = { it.id }
+                            key = { it.jugadorId }
                         ) { jugador ->
                             JugadorItem(
                                 jugador = jugador,
                                 onDelete = {
-                                    onEvent(JugadorEvent.DeleteJugador(jugador.id))
+                                    onEvent(JugadorEvent.DeleteJugador(jugador.jugadorId))
                                 }
                             )
                         }
@@ -193,7 +193,7 @@ fun JugadorItem(
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .testTag("task_item_${jugador.id}")
+            .testTag("task_item_${jugador.jugadorId}")
     ) {
         Row(
             modifier = Modifier
@@ -226,7 +226,7 @@ fun JugadorItem(
 
             IconButton(
                 onClick = onDelete,
-                modifier = Modifier.testTag("btn_delete_${jugador.id}")
+                modifier = Modifier.testTag("btn_delete_${jugador.jugadorId}")
             ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
@@ -245,19 +245,19 @@ private fun TaskListBodyPreview() {
             isLoading = false,
             jugadores = listOf(
                 Jugador(
-                    id = "1",
+                    jugadorId = "1",
                     nombres = "Erick",
                     email = "string",
                     isPendingCreate = false
                 ),
                 Jugador(
-                    id = "2",
+                    jugadorId = "2",
                     nombres = "Erick",
                     email = "string",
                     isPendingCreate = false
                 ),
                 Jugador(
-                    id = "3",
+                    jugadorId = "3",
                     nombres = "Erick",
                     email = "string",
                     isPendingCreate = false
