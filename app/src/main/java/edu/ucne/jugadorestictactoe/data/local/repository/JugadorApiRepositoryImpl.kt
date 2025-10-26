@@ -1,5 +1,6 @@
 package edu.ucne.jugadorestictactoe.data.local.repository
 
+import android.util.Log
 import edu.ucne.jugadorestictactoe.data.local.jugadores.Dao.JugadorDao
 import edu.ucne.jugadorestictactoe.data.local.mappers.toDomain
 import edu.ucne.jugadorestictactoe.data.local.mappers.toEntity
@@ -67,13 +68,23 @@ class JugadorApiRepositoryImpl @Inject constructor(
             val request = JugadorRequest(jugador.nombres, jugador.email)
             when (val result = remoteDataSource.createJugador(request)) {
                 is Resource.Success -> {
-                    val synced = jugador.copy(remoteId = result.data?.jugadorId, isPendingCreate = false)
-                    localDataSource.upsert(synced)
+                    val remoteId = result.data?.jugadorId
+                    if (remoteId != null) {
+                        val synced = jugador.copy(remoteId = remoteId, isPendingCreate = false)
+                        localDataSource.upsert(synced)
+                    } else {
+                        Log.e("SyncWorker", "jugadorId nulo para ${jugador.jugadorId}")
+                        return Resource.Error("Falló sincronización de ${jugador.nombres}: jugadorId nulo")
+                    }
                 }
-                is Resource.Error -> return Resource.Error("Falló sincronización")
+                is Resource.Error -> {
+                    Log.e("SyncWorker", "Error sincronizando jugador ${jugador.jugadorId}: ${result.message}")
+                    return Resource.Error("Falló sincronización de ${jugador.nombres}: ${result.message}")
+                }
                 else -> {}
             }
         }
         return Resource.Success(Unit)
     }
+
 }
