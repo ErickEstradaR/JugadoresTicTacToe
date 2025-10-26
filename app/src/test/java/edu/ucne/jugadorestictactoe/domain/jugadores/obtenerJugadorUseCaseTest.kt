@@ -25,7 +25,7 @@ class ObtenerJugadorUseCaseTest {
 
     @Test
     fun `invoke returns jugador when found`() = runTest {
-        val jugador = Jugador(id = 1, nombre = "Juan" , partidas =5)
+        val jugador = Jugador(jugadorId = 1, nombre = "Juan" , partidas =5)
         coEvery { repository.find(1) } returns jugador
 
         val result = useCase(1)
