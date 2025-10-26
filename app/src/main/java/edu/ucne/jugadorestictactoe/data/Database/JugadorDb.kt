@@ -15,7 +15,7 @@ import edu.ucne.jugadorestictactoe.data.local.partidas.Entity.PartidaEntity
         PartidaEntity::class,
         LogroEntity::class
     ],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 
