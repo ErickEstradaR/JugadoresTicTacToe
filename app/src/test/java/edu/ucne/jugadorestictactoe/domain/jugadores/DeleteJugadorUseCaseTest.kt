@@ -1,6 +1,5 @@
 package edu.ucne.jugadorestictactoe.domain.jugadores
 
-import app.cash.turbine.test
 import edu.ucne.jugadorestictactoe.domain.model.Jugador
 import edu.ucne.jugadorestictactoe.domain.repository.JugadorRepository
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.EliminarJugadorUseCase
@@ -26,7 +25,7 @@ class EliminarJugadorUseCaseTest {
 
     @Test
     fun `calls repository delete with jugador`() = runTest {
-        val jugador = Jugador(id = 1, nombre = "Juan", partidas = 1)
+        val jugador = Jugador(jugadorId = 1, nombre = "Juan", partidas = 1)
 
         coEvery { repository.delete(jugador) } just runs
 

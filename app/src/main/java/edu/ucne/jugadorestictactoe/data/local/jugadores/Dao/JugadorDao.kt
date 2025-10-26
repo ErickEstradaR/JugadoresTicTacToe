@@ -22,7 +22,7 @@ interface JugadorDao{
     )
     suspend fun find(id: String): JugadorEntity?
 
-    @Query("DELETE FROM Jugadores WHERE id = :id")
+    @Query("DELETE FROM Jugadores WHERE jugadorId = :id")
     suspend fun delete(id: String)
 
     @Query("SELECT * FROM Jugadores")
