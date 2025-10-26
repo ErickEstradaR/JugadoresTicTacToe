@@ -8,7 +8,7 @@ import java.util.UUID
 
 data class JugadorEntity(
     @PrimaryKey
-    val id: String = UUID.randomUUID().toString(),
+    val jugadorId: String = UUID.randomUUID().toString(),
     val remoteId: Int? = null,
     val nombres: String = "",
     val email: String = "",
