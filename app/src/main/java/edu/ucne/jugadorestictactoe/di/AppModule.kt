@@ -1,7 +1,11 @@
 package edu.ucne.jugadorestictactoe.di
 
 import android.content.Context
+import androidx.hilt.work.HiltWorkerFactory
 import androidx.room.Room
+import androidx.work.ListenableWorker
+import androidx.work.WorkerFactory
+import androidx.work.WorkerParameters
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -9,13 +13,15 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import edu.ucne.jugadorestictactoe.data.Database.JugadorDb
+import edu.ucne.jugadorestictactoe.data.local.jugadores.Dao.JugadorDao
 import edu.ucne.jugadorestictactoe.data.local.repository.JugadorApiRepositoryImpl
-import edu.ucne.jugadorestictactoe.data.local.repository.JugadorRepositoryImpl
 import edu.ucne.jugadorestictactoe.data.local.repository.LogroRepositoryImpl
 import edu.ucne.jugadorestictactoe.data.local.repository.MovimientoApiRepositoryImpl
 import edu.ucne.jugadorestictactoe.data.local.repository.PartidaApiRepositoryImpl
 import edu.ucne.jugadorestictactoe.data.local.repository.PartidaRepositoryImpl
 import edu.ucne.jugadorestictactoe.data.local.repository.TecnicoRepositoryImpl
+import edu.ucne.jugadorestictactoe.data.remote.dto.JugadorRemoteDataSource
+import edu.ucne.jugadorestictactoe.data.remote.dto.partidaApi.JugadorApiService
 import edu.ucne.jugadorestictactoe.domain.repository.JugadorApiRepository
 import edu.ucne.jugadorestictactoe.domain.repository.JugadorRepository
 import edu.ucne.jugadorestictactoe.domain.repository.LogroRepository
@@ -33,12 +39,12 @@ import edu.ucne.jugadorestictactoe.domain.useCase.GameUseCases.MovimientoUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.GameUseCases.PartidaUseCases.CrearPartidaUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.GameUseCases.PartidaUseCases.ObtenerPartidaApiUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.GameUseCases.PartidaUseCases.PartidaApiUseCases
+import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.CreateJugadorLocalUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.EliminarJugadorUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.GuardarJugadorUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.JugadorUseCases
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.ObtenerJugadorUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.ObtenerJugadoresUseCase
-import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.ValidarJugadorUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.LogrosUseCase.EliminarLogroUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.LogrosUseCase.GuardarLogroUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.LogrosUseCase.LogrosUseCases
@@ -55,6 +61,7 @@ import edu.ucne.jugadorestictactoe.domain.useCase.TecnicoUseCase.GuardarTecnicoU
 import edu.ucne.jugadorestictactoe.domain.useCase.TecnicoUseCase.ObtenerTecnicoUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.TecnicoUseCase.ObtenerTecnicosUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.TecnicoUseCase.TecnicoUseCases
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -65,12 +72,21 @@ object AppModule {
     @Singleton
     fun providesJugadorDb(@ApplicationContext appContext: Context) =
         Room.databaseBuilder(
-            appContext,
-            JugadorDb::class.java,
-            "JugadorDb"
-        ).fallbackToDestructiveMigration()
+                appContext,
+                JugadorDb::class.java,
+                "JugadorDb"
+            ).fallbackToDestructiveMigration()
             .build()
 
+
+    @Provides
+    @Singleton
+    fun provideJugadorRepository(
+        localDataSource: JugadorDao,
+        remoteDataSource: JugadorRemoteDataSource
+    ): JugadorRepository {
+        return JugadorApiRepositoryImpl(localDataSource, remoteDataSource)
+    }
 
     @Provides
     fun providesJugadorDao(jugadorDb: JugadorDb) = jugadorDb.JugadorDao()
@@ -81,13 +97,12 @@ object AppModule {
 
     @Provides
     fun provideJugadorUseCases(repository: JugadorRepository): JugadorUseCases {
-        val validarJugador = ValidarJugadorUseCase(repository)
         return JugadorUseCases(
-            validarJugador = validarJugador,
-            guardarJugador = GuardarJugadorUseCase(repository, validarJugador),
+            guardarJugador = GuardarJugadorUseCase(repository),
             eliminarJugador = EliminarJugadorUseCase(repository),
             obtenerJugador = ObtenerJugadorUseCase(repository),
-            obtenerJugadores = ObtenerJugadoresUseCase(repository)
+            obtenerJugadores = ObtenerJugadoresUseCase(repository),
+            createJugadorLocalUseCase = CreateJugadorLocalUseCase(repository)
         )}
     @Provides
     fun providePartidaUseCases(repository: PartidaRepository): PartidaUseCases{
@@ -151,12 +166,6 @@ object AppModule {
 
         @Binds
         @Singleton
-        abstract fun bindJugadorRepository(
-            impl: JugadorRepositoryImpl
-        ): JugadorRepository
-
-        @Binds
-        @Singleton
         abstract fun bindPartidaRepository(
             impl: PartidaRepositoryImpl
         ): PartidaRepository
@@ -167,11 +176,6 @@ object AppModule {
             impl: TecnicoRepositoryImpl
         ): TecnicoRepository
 
-        @Binds
-        @Singleton
-        abstract fun bindJugadorApiRepository(
-            impl: JugadorApiRepositoryImpl
-        ): JugadorApiRepository
 
         @Binds
         @Singleton
@@ -184,6 +188,8 @@ object AppModule {
         abstract fun bindLogroRepository(
             impl: LogroRepositoryImpl
         ): LogroRepository
+
+
 
         @Binds
         @Singleton
