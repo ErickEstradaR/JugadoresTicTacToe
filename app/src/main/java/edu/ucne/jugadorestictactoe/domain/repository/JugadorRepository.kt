@@ -11,4 +11,6 @@ interface JugadorRepository {
     suspend fun delete(id: String) : Resource<Unit>
     suspend fun upsert(jugador: Jugador): Resource<Unit>
     suspend fun createJugadorLocal(jugador: Jugador): Resource<Jugador>
+
+    suspend fun refreshJugadores(): Resource<Unit>
 }
