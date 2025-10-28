@@ -66,25 +66,43 @@ class JugadorApiRepositoryImpl @Inject constructor(
         val pending = localDataSource.getPendingCreateJugadores()
         for (jugador in pending) {
             val request = JugadorRequest(jugador.nombres, jugador.email)
-            when (val result = remoteDataSource.createJugador(request)) {
-                is Resource.Success -> {
-                    val remoteId = result.data?.jugadorId
-                    if (remoteId != null) {
-                        val synced = jugador.copy(remoteId = remoteId, isPendingCreate = false)
-                        localDataSource.upsert(synced)
-                    } else {
-                        Log.e("SyncWorker", "jugadorId nulo para ${jugador.jugadorId}")
-                        return Resource.Error("Falló sincronización de ${jugador.nombres}: jugadorId nulo")
-                    }
+            try {
+                val result = remoteDataSource.createJugador(request)
+                if (result is Resource.Success && result.data?.jugadorId != null) {
+                    val synced = jugador.copy(
+                        remoteId = result.data.jugadorId,
+                        isPendingCreate = false
+                    )
+                    localDataSource.upsert(synced)
+                    Log.d("SyncWorker", "Sincronizado ${jugador.nombres}")
+                } else {
+                    Log.e("SyncWorker", "jugadorId nulo para ${jugador.jugadorId}, se marca como pendiente fallido")
+                    localDataSource.upsert(jugador.copy(isPendingCreate = false))
                 }
-                is Resource.Error -> {
-                    Log.e("SyncWorker", "Error sincronizando jugador ${jugador.jugadorId}: ${result.message}")
-                    return Resource.Error("Falló sincronización de ${jugador.nombres}: ${result.message}")
-                }
-                else -> {}
+            } catch (e: Exception) {
+                Log.e("SyncWorker", "Error sincronizando ${jugador.jugadorId}: ${e.message}")
+                return Resource.Error("Error de red")
             }
         }
         return Resource.Success(Unit)
     }
 
+    override suspend fun refreshJugadores(): Resource<Unit> {
+        return when (val result = remoteDataSource.getJugadores()) {
+            is Resource.Success -> {
+
+                val remoteJugadores = result.data?.map { it.toEntity() }
+
+                remoteJugadores?.forEach { entity ->
+                    localDataSource.upsert(entity)
+                }
+
+                Log.d("JugadorApiRepository", "Datos de la API sincronizados uno por uno en Room.")
+                Resource.Success(Unit)
+            }
+            else -> Resource.Loading()
+        }
+    }
 }
+
+
