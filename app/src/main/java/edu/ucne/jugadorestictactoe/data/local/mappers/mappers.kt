@@ -3,6 +3,7 @@ package edu.ucne.jugadorestictactoe.data.local.mappers
 import edu.ucne.jugadorestictactoe.data.local.jugadores.Entities.JugadorEntity
 import edu.ucne.jugadorestictactoe.data.local.logros.entity.LogroEntity
 import edu.ucne.jugadorestictactoe.data.local.partidas.Entity.PartidaEntity
+import edu.ucne.jugadorestictactoe.data.remote.dto.jugador.JugadorRequest
 import edu.ucne.jugadorestictactoe.data.remote.dto.jugador.JugadorResponse
 import edu.ucne.jugadorestictactoe.data.remote.dto.partida.MovimientoDto
 import edu.ucne.jugadorestictactoe.data.remote.dto.partida.PartidaDto
@@ -12,6 +13,7 @@ import edu.ucne.jugadorestictactoe.domain.model.Logro
 import edu.ucne.jugadorestictactoe.domain.model.Movimiento
 import edu.ucne.jugadorestictactoe.domain.model.Partida
 import edu.ucne.jugadorestictactoe.domain.model.PartidaApi
+import java.util.UUID
 
 
 fun JugadorEntity.toDomain() = Jugador(
@@ -89,6 +91,17 @@ fun Jugador.toEntity() = JugadorEntity(
         nombres = nombres,
         email = email
     )
+
+fun JugadorResponse.toEntity(): JugadorEntity {
+    return JugadorEntity(
+        // Genera un ID local único para Room. Esto es crucial.
+        jugadorId = UUID.randomUUID().toString(),
+        remoteId = this.jugadorId,
+        nombres = this.nombres,
+        email = this.email,
+        isPendingCreate = false
+    )
+}
 
 
 
