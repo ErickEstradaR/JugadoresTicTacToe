@@ -12,7 +12,7 @@ import retrofit2.http.Path
 
 interface JugadorApiService {
     @GET("api/Jugadores")
-    suspend fun getJugadores(): List<JugadorResponse>
+    suspend fun getJugadores(): Response<List<JugadorResponse>>
 
     @GET("api/Jugadores/{id}")
     suspend fun getJugador(@Path("id") id: Int): JugadorResponse
