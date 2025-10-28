@@ -61,7 +61,12 @@ class JugadorRemoteDataSource @Inject constructor(
     suspend fun getJugadores(): Resource<List<JugadorResponse>> {
         return try {
             val response = api.getJugadores()
-            Resource.Success(response)
+            if (response.isSuccessful) {
+                response.body()?.let { Resource.Success(it) }
+                    ?: Resource.Error("Respuesta vacía al obtener lista de jugadores")
+            } else {
+                Resource.Error("HTTP ${response.code()} al obtener lista de jugadores: ${response.message()}")
+            }
         } catch (e: Exception) {
             Resource.Error(e.localizedMessage ?: "Error de red al obtener jugadores")
         }
