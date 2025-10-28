@@ -8,10 +8,14 @@ import edu.ucne.jugadorestictactoe.domain.model.Jugador
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.CreateJugadorLocalUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.EliminarJugadorUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.GuardarJugadorUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.ObtenerJugadoresUseCase
+import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.RefreshJugadoresUseCase
 import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.TriggerSyncUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,11 +25,29 @@ class JugadorViewModel @Inject constructor(
     private val createJugadorLocalUseCase: CreateJugadorLocalUseCase,
     private val upsertJugador: GuardarJugadorUseCase,
     private val deleteTaskUseCase: EliminarJugadorUseCase,
-    private val triggerSyncUseCase: TriggerSyncUseCase
+    private val triggerSyncUseCase: TriggerSyncUseCase,
+    private val refresh : RefreshJugadoresUseCase,
+    private val obtenerJugadores: ObtenerJugadoresUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(JugadorUiState(isLoading = true))
     val state: StateFlow<JugadorUiState> = _state.asStateFlow()
+
+
+    init {
+        loadJugadores()
+
+        obtenerJugadores()
+            .onEach { jugadores ->
+                _state.update {
+                    it.copy(
+                        jugadores = jugadores,
+                        isLoading = false
+                    )
+                }
+            }
+            .launchIn(viewModelScope)
+    }
 
     fun onEvent(event: JugadorEvent) {
         when (event) {
@@ -67,9 +89,19 @@ class JugadorViewModel @Inject constructor(
         }
     }
 
+    private fun loadJugadores() = viewModelScope.launch {
+
+        when (refresh()) {
+            is Resource.Success -> {
+            }
+            is Resource.Error -> {
+                _state.update { it.copy(userMessage = "No se pudieron cargar todos los jugadores de la red.") }
+            }
+            else -> {}
+        }
+    }
+
     private fun clearMessage() {
         _state.update { it.copy(userMessage = null) }
     }
-
-
 }
