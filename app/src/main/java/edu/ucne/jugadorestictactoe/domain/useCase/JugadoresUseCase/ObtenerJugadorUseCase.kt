@@ -6,7 +6,7 @@ import edu.ucne.jugadorestictactoe.domain.repository.JugadorRepository
 class ObtenerJugadorUseCase(
     private val repository: JugadorRepository
 ) {
-    suspend operator fun invoke(id: Int): Jugador? {
+    suspend operator fun invoke(id: String): Jugador? {
         return repository.find(id)
     }
 }

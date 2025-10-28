@@ -1,4 +1,4 @@
-package edu.ucne.jugadorestictactoe.data.remote.dto
+package edu.ucne.jugadorestictactoe.data.remote
 
 sealed class Resource<T>(val data: T? = null, val message: String? = null) {
     class Success<T>(data: T): Resource<T>(data)

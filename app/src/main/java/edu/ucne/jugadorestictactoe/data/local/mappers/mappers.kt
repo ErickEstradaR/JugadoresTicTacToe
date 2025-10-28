@@ -3,22 +3,34 @@ package edu.ucne.jugadorestictactoe.data.local.mappers
 import edu.ucne.jugadorestictactoe.data.local.jugadores.Entities.JugadorEntity
 import edu.ucne.jugadorestictactoe.data.local.logros.entity.LogroEntity
 import edu.ucne.jugadorestictactoe.data.local.partidas.Entity.PartidaEntity
+import edu.ucne.jugadorestictactoe.data.remote.dto.jugador.JugadorRequest
+import edu.ucne.jugadorestictactoe.data.remote.dto.jugador.JugadorResponse
+import edu.ucne.jugadorestictactoe.data.remote.dto.partida.MovimientoDto
+import edu.ucne.jugadorestictactoe.data.remote.dto.partida.PartidaDto
 import edu.ucne.jugadorestictactoe.domain.model.Jugador
+import edu.ucne.jugadorestictactoe.domain.model.JugadorApi
 import edu.ucne.jugadorestictactoe.domain.model.Logro
+import edu.ucne.jugadorestictactoe.domain.model.Movimiento
 import edu.ucne.jugadorestictactoe.domain.model.Partida
+import edu.ucne.jugadorestictactoe.domain.model.PartidaApi
+import java.util.UUID
 
 
 fun JugadorEntity.toDomain() = Jugador(
-        id = jugadorId ?: 0,
-        nombre = nombres,
-        partidas = partidas
-    )
+    jugadorId = jugadorId,
+    remoteId = remoteId,
+    nombres = nombres,
+    email = email,
+    isPendingCreate = isPendingCreate
+)
 
-    fun Jugador.toEntity() = JugadorEntity(
-        jugadorId = id,
-        nombres = nombre,
-        partidas = partidas
-    )
+fun Jugador.toEntity() = JugadorEntity(
+    jugadorId = jugadorId,
+    remoteId = remoteId,
+    nombres = nombres,
+    email = email,
+    isPendingCreate = isPendingCreate
+)
 
     fun PartidaEntity.toDomain() = Partida(
         id = partidaId ?: 0,
@@ -49,5 +61,49 @@ fun JugadorEntity.toDomain() = Jugador(
         nombre = nombre,
         descripcion = descripcion
     )
+
+    fun PartidaDto.toDomain() = PartidaApi(
+        jugador1Id = jugador1Id,
+        jugador2Id = jugador2Id
+    )
+
+
+    fun PartidaApi.toDto() = PartidaDto(
+        jugador1Id = jugador1Id,
+        jugador2Id = jugador2Id,
+        )
+
+    fun Movimiento.toDto() = MovimientoDto(
+        partidaId = partidaId,
+        jugador = jugador,
+        posicionFila = posicionFila,
+        posicionColumna = posicionColumna
+    )
+
+    fun MovimientoDto.toDomain() = Movimiento(
+        partidaId = partidaId,
+        jugador = jugador,
+        posicionFila = posicionFila,
+        posicionColumna = posicionColumna
+    )
+
+    fun JugadorResponse.toDomain()= JugadorApi(
+        nombres = nombres,
+        email = email
+    )
+
+fun JugadorResponse.toEntity(): JugadorEntity {
+    return JugadorEntity(
+        // Genera un ID local único para Room. Esto es crucial.
+        jugadorId = UUID.randomUUID().toString(),
+        remoteId = this.jugadorId,
+        nombres = this.nombres,
+        email = this.email,
+        isPendingCreate = false
+    )
+}
+
+
+
 
 

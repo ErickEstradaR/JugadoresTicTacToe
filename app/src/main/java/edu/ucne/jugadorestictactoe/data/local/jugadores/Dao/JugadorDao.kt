@@ -10,19 +10,24 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface JugadorDao{
     @Upsert
-    suspend fun save(jugador: JugadorEntity)
+    suspend fun upsert(jugador: JugadorEntity)
 
-    @Query("""
+    @Query(
+        """
             SELECT *
             FROM Jugadores
-            WHERE jugadorId =:id
+            WHERE remoteId =:id
             Limit 1
-    """)
-    suspend fun find(id: Int): JugadorEntity?
+    """
+    )
+    suspend fun find(id: String): JugadorEntity?
 
-    @Delete
-    suspend fun delete(jugador: JugadorEntity)
+    @Query("DELETE FROM Jugadores WHERE jugadorId = :id")
+    suspend fun delete(id: String)
 
     @Query("SELECT * FROM Jugadores")
-    fun getAll(): Flow<List<JugadorEntity>>
+    fun observeJugadores(): Flow<List<JugadorEntity>>
+
+    @Query("SELECT * FROM Jugadores WHERE isPendingCreate = 1")
+    suspend fun getPendingCreateJugadores(): List<JugadorEntity>
 }

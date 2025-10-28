@@ -2,7 +2,6 @@ package edu.ucne.jugadorestictactoe.domain.jugadores
 
 import edu.ucne.jugadorestictactoe.domain.model.Jugador
 import edu.ucne.jugadorestictactoe.domain.repository.JugadorRepository
-import edu.ucne.jugadorestictactoe.domain.useCase.JugadoresUseCase.ValidarJugadorUseCase
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest

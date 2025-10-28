@@ -1,7 +1,11 @@
 package edu.ucne.jugadorestictactoe.domain.model
 
+import java.util.UUID
+
 data class Jugador(
-    val id: Int? = null,
-    val nombre: String,
-    val partidas: Int
+    val jugadorId: String = UUID.randomUUID().toString(),
+    val remoteId: Int? = null,
+    val nombres: String,
+    val email: String,
+    val isPendingCreate: Boolean = false
 )

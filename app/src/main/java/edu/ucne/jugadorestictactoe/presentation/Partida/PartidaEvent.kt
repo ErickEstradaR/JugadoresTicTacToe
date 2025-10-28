@@ -1,6 +1,5 @@
 package edu.ucne.jugadorestictactoe.presentation.Partida
 
-import edu.ucne.jugadorestictactoe.presentation.Jugador.JugadorEvent
 
 
 sealed interface PartidaEvent {

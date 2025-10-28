@@ -27,8 +27,8 @@ class ObtenerJugadoresUseCaseTest {
     @Test
     fun `invoke returns all jugadores from repository`() = runTest {
         val jugadores = listOf(
-            Jugador(id = 1, nombre = "Juan",partidas =5),
-            Jugador(id = 2, nombre = "Ana",partidas =5)
+            Jugador(jugadorId = 1, nombre = "Juan",partidas =5),
+            Jugador(jugadorId = 2, nombre = "Ana",partidas =5)
         )
         val flow: Flow<List<Jugador>> = flowOf(jugadores)
 
